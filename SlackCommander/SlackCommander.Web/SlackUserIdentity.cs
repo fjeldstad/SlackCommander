@@ -15,7 +15,7 @@ namespace SlackCommander.Web
 
         public string UserName
         {
-            get { return "dummy-username"; }
+            get { return "Slack"; }
         }
     }
 }

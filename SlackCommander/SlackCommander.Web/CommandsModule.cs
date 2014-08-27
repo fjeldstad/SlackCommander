@@ -8,7 +8,7 @@ namespace SlackCommander.Web
     {
         public CommandsModule(CommandHandler commandHandler)
         {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Post["/commands"] = _ =>
             {
