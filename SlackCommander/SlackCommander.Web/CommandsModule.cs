@@ -6,14 +6,14 @@ namespace SlackCommander.Web
 {
     public class CommandsModule : NancyModule
     {
-        public CommandsModule()
+        public CommandsModule(CommandHandler commandHandler)
         {
             //this.RequiresAuthentication();
 
             Post["/commands"] = _ =>
             {
                 var command = this.Bind<Command>();
-                return command.Handle();
+                return commandHandler.Handle(command);
             };
         }
     }

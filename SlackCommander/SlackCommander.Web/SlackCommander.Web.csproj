@@ -63,6 +63,7 @@
     <Compile Include="AppSettings.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandHandlers\Whois.cs" />
     <Compile Include="CommandsModule.cs" />
     <Compile Include="IAppSettings.cs" />

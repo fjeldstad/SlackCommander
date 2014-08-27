@@ -13,14 +13,12 @@ namespace SlackCommander.Web
         {
             base.ConfigureApplicationContainer(container);
 
-            container.Register<Whois>("/whois");
+            container.Register<ICommandHandler, Whois>("/whois");
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
-
-            StaticConfiguration.DisableErrorTraces = false;
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
