@@ -13,16 +13,23 @@ namespace SlackCommander.Web
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
+        private readonly TinyIoCContainer _container;
+
+        public Bootstrapper(TinyIoCContainer container)
+        {
+            _container = container;
+        }
+
+        protected override TinyIoCContainer GetApplicationContainer()
+        {
+            return _container;
+        }
+
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
 
             container.Register<ICommandHandler, Whois>("/whois");
-        }
-
-        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
-        {
-            base.ApplicationStartup(container, pipelines);
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
