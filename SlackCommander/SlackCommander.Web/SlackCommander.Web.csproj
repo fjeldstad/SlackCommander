@@ -106,8 +106,9 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target> -->
   <Target Name="AfterBuild">
+    <Copy SourceFiles="Secret.template.config" DestinationFiles="Secret.config" SkipUnchangedFiles="true" Condition="!Exists('Secret.config')">
+    </Copy>
   </Target>
-  -->
 </Project>
