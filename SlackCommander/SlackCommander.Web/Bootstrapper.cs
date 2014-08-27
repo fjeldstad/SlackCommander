@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Text;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
+using Nancy.Helpers;
 using Nancy.Json;
 using Nancy.TinyIoc;
 using Newtonsoft.Json;
@@ -22,7 +24,6 @@ namespace SlackCommander.Web
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
-            StaticConfiguration.DisableErrorTraces = false;
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
@@ -32,12 +33,11 @@ namespace SlackCommander.Web
             StatelessAuthentication.Enable(pipelines, new StatelessAuthenticationConfiguration(ctx =>
             {
                 var appSettings = container.Resolve<IAppSettings>();
-                var command = JsonConvert.DeserializeObject<Command>(ctx.Request.Body.AsString());
-                if (command == null ||
-                    string.IsNullOrWhiteSpace(command.token) ||
-                    command.token != appSettings.Get("slack:commandToken"))
+                var body = HttpUtility.ParseQueryString(ctx.Request.Body.AsString(), Encoding.UTF8);
+                if (body == null ||
+                    string.IsNullOrWhiteSpace(body["token"]) ||
+                    body["token"] != appSettings.Get("slack:commandToken"))
                 {
-                    throw new Exception(string.Format("{0} - {1}", command.token, appSettings.Get("slack:commandToken")));
                     return null;
                 }
                 return new SlackUserIdentity();
