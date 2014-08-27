@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Nancy;
+using Nancy.TinyIoc;
 
 namespace SlackCommander.Web
 {
@@ -18,11 +20,25 @@ namespace SlackCommander.Web
 
     public static class CommandExtensions
     {
-        public static bool IsValid(this Command command)
+        private static bool IsValid(this Command command)
         {
             return command != null &&
                    !string.IsNullOrWhiteSpace(command.command) &&
                    !string.IsNullOrWhiteSpace(command.text);
+        }
+
+        public static dynamic Handle(this Command command)
+        {
+            if (!IsValid(command))
+            {
+                return HttpStatusCode.BadRequest;
+            }
+            var handler = TinyIoCContainer.Current.Resolve<ICommandHandler>(command.command);
+            if (handler == null)
+            {
+                return HttpStatusCode.BadRequest;
+            }
+            return handler.Handle(command);
         }
     }
 }
