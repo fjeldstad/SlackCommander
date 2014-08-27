@@ -7,7 +7,6 @@ using Nancy.Extensions;
 using Nancy.Helpers;
 using Nancy.Json;
 using Nancy.TinyIoc;
-using Newtonsoft.Json;
 using SlackCommander.Web.CommandHandlers;
 
 namespace SlackCommander.Web
