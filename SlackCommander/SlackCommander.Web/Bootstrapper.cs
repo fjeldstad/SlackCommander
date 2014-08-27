@@ -1,4 +1,5 @@
-﻿using Nancy;
+﻿using System;
+using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
@@ -21,6 +22,7 @@ namespace SlackCommander.Web
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
+            StaticConfiguration.DisableErrorTraces = false;
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
@@ -35,6 +37,7 @@ namespace SlackCommander.Web
                     string.IsNullOrWhiteSpace(command.token) ||
                     command.token != appSettings.Get("slack:commandToken"))
                 {
+                    throw new Exception(string.Format("{0} - {1}", command.token, appSettings.Get("slack:commandToken")));
                     return null;
                 }
                 return new SlackUserIdentity();
