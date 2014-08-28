@@ -15,12 +15,25 @@ namespace SlackCommander.Web
         {
             Post["/fullcontact/person", runAsync: true] = async (_, ct) =>
             {
-                // TODO Deserialize JSON body and extract person info
+                var personResult = this.Bind<FullContactPersonResult>();
+                if (personResult == null)
+                {
+                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("Unable to parse request body."));
+                }
+                if (string.IsNullOrWhiteSpace(personResult.WebhookId))
+                {
+                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("The webhookId property is missing from the request body."));
+                }
+                var command = pendingCommands.Get(personResult.WebhookId);
+                if (command == null)
+                {
+                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("No pending command matching the webhookId could be found."));
+                }
                 var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
                 await slackApi.SendMessage(new SlackMessage
                 {
                     channel = "#random",
-                    icon_emoji = ":mag_right:",
+                    icon_emoji = ":bust_in_silhouette:",
                     username = "SlackCommander",
                     text = "*Test*"
                 }, token: appSettings.Get("slack:responseToken"));

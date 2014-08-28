@@ -87,6 +87,9 @@
     <Compile Include="Command.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CommandHandlers\Whois.cs" />
+    <Compile Include="FullContactPersonResult.cs" />
+    <Compile Include="HttpStatusCodeExtensions.cs" />
+    <Compile Include="HttpStatusCodeResponse.cs" />
     <Compile Include="InMemoryPendingCommands.cs" />
     <Compile Include="ISlackApi.cs" />
     <Compile Include="SlackMessage.cs" />
