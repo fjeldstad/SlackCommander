@@ -16,7 +16,7 @@ namespace SlackCommander.Web
             Post["/fullcontact/person", runAsync: true] = async (_, ct) =>
             {
                 // Parse the request data
-                var person = this.Bind<WrappedFullContactPersonResult>();
+                var person = this.Bind<FullContactPersonResult>();
                 if (person == null || 
                     person.Result == null)
                 {
@@ -24,11 +24,11 @@ namespace SlackCommander.Web
                 }
 
                 // Get the pending command that corresponds to the posted data
-                if (string.IsNullOrWhiteSpace(person.Result.WebhookId))
+                if (string.IsNullOrWhiteSpace(person.WebhookId))
                 {
                     return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("The webhookId property is missing from the request body."));
                 }
-                var command = pendingCommands.Get(person.Result.WebhookId);
+                var command = pendingCommands.Get(person.WebhookId);
                 if (command == null)
                 {
                     return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("No pending command matching the webhookId could be found."));

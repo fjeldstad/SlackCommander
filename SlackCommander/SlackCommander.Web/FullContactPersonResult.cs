@@ -7,19 +7,19 @@ using Nancy;
 
 namespace SlackCommander.Web
 {
-    public class WrappedFullContactPersonResult
-    {
-        public FullContactPersonResult Result { get; set; }
-
-        public WrappedFullContactPersonResult()
-        {
-            Result = new FullContactPersonResult();
-        }
-    }
-
     public class FullContactPersonResult
     {
         public string WebhookId { get; set; }
+        public ResultSegment Result { get; set; }
+
+        public FullContactPersonResult()
+        {
+            Result = new ResultSegment();
+        }
+    }
+
+    public class ResultSegment
+    {
         public int Status { get; set; }
         public double Likelihood { get; set; }
         public ContactInfoSegment ContactInfo { get; set; }
@@ -28,7 +28,7 @@ namespace SlackCommander.Web
         public Organization[] Organizations { get; set; }
         public Photo[] Photos { get; set; }
 
-        public FullContactPersonResult()
+        public ResultSegment()
         {
             ContactInfo = new ContactInfoSegment();
             Demographics = new DemographicsSegment();
