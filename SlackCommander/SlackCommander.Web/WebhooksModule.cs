@@ -13,7 +13,7 @@ namespace SlackCommander.Web
         public WebhooksModule(IAppSettings appSettings, IPendingCommands pendingCommands)
             : base("/webhooks")
         {
-            Post["/fullcontact", runAsync: true] = async (_, ct) =>
+            Post["/fullcontact/person", runAsync: true] = async (_, ct) =>
             {
                 // TODO Deserialize JSON body and extract person info
                 var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
