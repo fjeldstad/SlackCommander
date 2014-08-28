@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nancy;
+using Nancy.Helpers;
 using Nancy.ModelBinding;
 using Nancy.Security;
 using Newtonsoft.Json;
@@ -48,8 +49,9 @@ namespace SlackCommander.Web
                 {
                     slackMessage.text = string.Format(
                         "Unfortunately I'm unable to find any reliable information on who *{0}* is. " +
-                        "I suggest you try <https://google.com/?q={0}#q={0}|Google>.",
-                        command.text);
+                        "I suggest you try <https://google.com/?q={1}#q={1}|Google>.",
+                        command.text,
+                        HttpUtility.UrlEncode(command.text));
                 }
                 else
                 {
