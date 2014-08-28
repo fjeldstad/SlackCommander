@@ -56,7 +56,7 @@ namespace SlackCommander.Web
                     var fullName = person.Result.ContactInfo.FullName;
                     var location = person.Result.Demographics.LocationGeneral;
                     var currentOrganizations = person.Result.Organizations
-                        .Where(o => string.IsNullOrWhiteSpace(o.EndDate) || o.Current == true)
+                        .Where(o => o.Current == true)
                         .OrderByDescending(o => o.IsPrimary == true);
                     var totalFollowers = person.Result.SocialProfiles.Sum(profile => profile.Followers);
                     var photo = person.Result.Photos
