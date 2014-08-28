@@ -41,7 +41,7 @@ namespace SlackCommander.Web
                 {
                     username = "SlackCommander",
                     icon_emoji = ":octopus:",
-                    channel = "#random"
+                    channel = command.channel_name == "directmessage" ? "@" + command.user_name : "#" + command.channel_name
                 };
                 if (person.Result.Status != 200 ||
                     person.Result.Likelihood < 0.7)
