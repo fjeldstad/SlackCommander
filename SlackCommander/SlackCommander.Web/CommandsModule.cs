@@ -10,10 +10,10 @@ namespace SlackCommander.Web
         {
             this.RequiresAuthentication();
 
-            Post["/commands"] = _ =>
+            Post["/commands", runAsync: true] = async (_, ct) =>
             {
                 var command = this.Bind<Command>();
-                return commandHandler.Handle(command);
+                return await commandHandler.Handle(command);
             };
         }
     }

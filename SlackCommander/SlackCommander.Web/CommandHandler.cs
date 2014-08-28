@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Nancy;
 using Nancy.TinyIoc;
@@ -16,11 +17,11 @@ namespace SlackCommander.Web
             _container = container;
         }
 
-        public dynamic Handle(Command command)
+        public Task<dynamic> Handle(Command command)
         {
             if (!_container.CanResolve<ICommandHandler>(command.command))
             {
-                return HttpStatusCode.BadRequest;
+                return Task.FromResult((dynamic)HttpStatusCode.BadRequest);
             }
             return _container.Resolve<ICommandHandler>(command.command).Handle(command);
         }

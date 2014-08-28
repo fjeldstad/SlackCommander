@@ -13,18 +13,6 @@ namespace SlackCommander.Web
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
-        private readonly TinyIoCContainer _container;
-
-        public Bootstrapper(TinyIoCContainer container)
-        {
-            _container = container;
-        }
-
-        protected override TinyIoCContainer GetApplicationContainer()
-        {
-            return _container;
-        }
-
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);

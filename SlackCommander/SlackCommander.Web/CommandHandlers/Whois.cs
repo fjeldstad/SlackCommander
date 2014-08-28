@@ -2,26 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
+using Refit;
 
 namespace SlackCommander.Web.CommandHandlers
 {
     public class Whois : ICommandHandler
     {
-        public dynamic Handle(Command command)
+        private readonly string _fullContactApiBaseUrl;
+        private readonly string _fullContactApiKey;
+        private readonly string _fullContactWebhookUrl;
+        private readonly IPendingCommands _pendingCommands;
+
+        public Whois(IAppSettings appSettings, IPendingCommands pendingCommands)
         {
+            _fullContactApiBaseUrl = appSettings.Get("fullContact:apiBaseUrl");
+            _fullContactApiKey = appSettings.Get("fullContact:apiKey");
+            _fullContactWebhookUrl = appSettings.Get("fullContact:webhookUrl");
+            _pendingCommands = pendingCommands;
+        }
+
+        public async Task<dynamic> Handle(Command command)
+        {
+            if (!command.text.IsValidEmail())
+            {
+                return string.Format("Sorry, *{0}* does not seem to be a valid e-mail address.", command.text);
+            }
+
+            var commandId = Guid.NewGuid().ToString();
+            var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try
             {
-                new MailAddress(command.text);
+                await fullContactApi.LookupByEmail(command.text, _fullContactWebhookUrl, commandId, _fullContactApiKey);
+                _pendingCommands.Add(commandId, command);
+                return string.Format("Looking up *{0}*, give me a few moments...", command.text);
             }
             catch
             {
-                return string.Format("Sorry, '{0}' does not seem to be a valid e-mail address.", command.text);
+                return string.Format("There was a problem with the lookup. I'm sorry.");
             }
-
-            // TODO
-            // https://api.fullcontact.com/v2/person.json?email=bart@fullcontact.com&apiKey=xxxx
-            return string.Format("Looking up '{0}', just a second...", command.text);
         }
     }
 }

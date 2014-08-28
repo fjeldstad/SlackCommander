@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Refit;
 
 namespace SlackCommander.Web
 {
-    public interface ICommandHandler
+    public interface ISlackApi
     {
-        Task<dynamic> Handle(Command command);
+        [Post("/services/hooks/incoming-webhook")]
+        Task SendMessage([Body] SlackMessage message, string token);
     }
 }

@@ -7,9 +7,9 @@ using Nancy.TinyIoc;
 
 namespace SlackCommander.Web
 {
+    [Serializable]
     public class Command
     {
-        public string token { get; set; }
         public string team_id { get; set; }
         public string channel_id { get; set; }
         public string channel_name { get; set; }
