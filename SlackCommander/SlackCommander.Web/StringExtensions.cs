@@ -21,6 +21,11 @@ namespace SlackCommander.Web
             }
         }
 
+        public static bool CouldBeTwitterHandle(this string value)
+        {
+            return !string.IsNullOrWhiteSpace(value) && value.StartsWith("@");
+        }
+
         public static bool Missing(this string value)
         {
             return string.IsNullOrWhiteSpace(value);

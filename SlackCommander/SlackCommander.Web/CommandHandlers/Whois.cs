@@ -25,16 +25,32 @@ namespace SlackCommander.Web.CommandHandlers
 
         public async Task<dynamic> Handle(Command command)
         {
-            if (!command.text.IsValidEmail())
+            if (!command.text.IsValidEmail() &&
+                !command.text.CouldBeTwitterHandle())
             {
-                return string.Format("Sorry, *{0}* does not seem to be a valid e-mail address.", command.text);
+                return string.Format("Sorry, *{0}* does not seem to be neither a valid e-mail address nor a Twitter handle.", command.text);
             }
 
             var commandId = Guid.NewGuid().ToString();
             var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try
             {
-                await fullContactApi.LookupByEmail(command.text, _fullContactWebhookUrl, commandId, _fullContactApiKey);
+                if (command.text.IsValidEmail())
+                {
+                    await fullContactApi.LookupByEmail(
+                        command.text, 
+                        _fullContactWebhookUrl, 
+                        commandId, 
+                        _fullContactApiKey);
+                }
+                else
+                {
+                    await fullContactApi.LookupByTwitterHandle(
+                        command.text.TrimStart('@'), 
+                        _fullContactWebhookUrl,
+                        commandId, 
+                        _fullContactApiKey);
+                }
                 _pendingCommands.Add(commandId, command);
                 return string.Format("Looking up *{0}*, give me a few moments...", command.text);
             }
