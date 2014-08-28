@@ -95,6 +95,22 @@ namespace SlackCommander.Web
             public string StartDate { get; set; } // YYYY-MM
             public string EndDate { get; set; }   // YYYY-MM
             public bool? IsPrimary { get; set; }
+
+            public string Description
+            {
+                get
+                {
+                    if (!Title.Missing() && !Name.Missing())
+                    {
+                        return string.Format("{0} at {1}", Title, Name);
+                    }
+                    if (!Title.Missing())
+                    {
+                        return Title;
+                    }
+                    return Name;
+                }
+            }
         }
 
         public class Photo

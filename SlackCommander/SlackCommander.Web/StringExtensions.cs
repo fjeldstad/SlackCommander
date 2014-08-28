@@ -20,5 +20,10 @@ namespace SlackCommander.Web
                 return false;
             }
         }
+
+        public static bool Missing(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
     }
 }

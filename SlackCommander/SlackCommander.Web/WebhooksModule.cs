@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Nancy;
 using Nancy.ModelBinding;
@@ -16,7 +18,7 @@ namespace SlackCommander.Web
             Post["/fullcontact/person", runAsync: true] = async (_, ct) =>
             {
                 // Parse the request data
-                var person = this.Bind<FullContactPersonResult>();
+                var person = this.BindTo(new FullContactPersonResult());
                 if (person == null || 
                     person.Result == null)
                 {
@@ -51,7 +53,32 @@ namespace SlackCommander.Web
                 }
                 else
                 {
-                    slackMessage.text = string.Format("Likelihood: *{0}*", person.Result.Likelihood.ToString("F2"));
+                    var fullName = person.Result.ContactInfo.FullName;
+                    var organization = person.Result.Organizations
+                        .Where(o => string.IsNullOrWhiteSpace(o.EndDate))
+                        .OrderBy(o => o.IsPrimary == true)
+                        .FirstOrDefault();
+                    var totalFollowers = person.Result.SocialProfiles.Sum(profile => profile.Followers);
+
+                    var text = new StringBuilder();
+                    text.AppendFormat(
+                        "I looked up *{0}* and I'm {1:P0} sure this is the person behind it:\n\n", 
+                        command.text, 
+                        person.Result.Likelihood);
+
+                    text.AppendFormat("Name: *{0}*\n", person.Result.ContactInfo.FullName ?? "unknown");
+                    text.AppendFormat("Work: *{0}*\n", organization != null ? organization.Description : "unknown");
+                    if (totalFollowers.HasValue)
+                    {
+                        text.AppendFormat("Followers: *{0}*", totalFollowers.Value);
+                        if (totalFollowers > 1000)
+                        {
+                            text.Append(" (wow!)");
+                        }
+                        text.Append("\n");
+                    }
+
+                    slackMessage.text = text.ToString().TrimEnd('\n');
                 }
 
                 // Post message to Slack
