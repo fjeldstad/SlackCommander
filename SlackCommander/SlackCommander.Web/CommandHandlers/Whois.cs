@@ -28,7 +28,7 @@ namespace SlackCommander.Web.CommandHandlers
             if (!command.text.IsValidEmail() &&
                 !command.text.CouldBeTwitterHandle())
             {
-                return "Sorry, I'm only able to work with either e-mail addresses or Twitter handles.";
+                return "Sorry, I'm only able to work with e-mail addresses and Twitter handles.";
             }
 
             var commandId = Guid.NewGuid().ToString();
