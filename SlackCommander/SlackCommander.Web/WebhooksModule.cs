@@ -15,11 +15,14 @@ namespace SlackCommander.Web
         {
             Post["/fullcontact/person", runAsync: true] = async (_, ct) =>
             {
+                // Parse the request data
                 var personResult = this.Bind<FullContactPersonResult>();
                 if (personResult == null)
                 {
                     return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("Unable to parse request body."));
                 }
+
+                // Get the pending command that corresponds to the posted data
                 if (string.IsNullOrWhiteSpace(personResult.WebhookId))
                 {
                     return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("The webhookId property is missing from the request body."));
@@ -29,14 +32,30 @@ namespace SlackCommander.Web
                 {
                     return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("No pending command matching the webhookId could be found."));
                 }
-                var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
-                await slackApi.SendMessage(new SlackMessage
+
+                // Prepare message
+                var slackMessage = new SlackMessage
                 {
-                    channel = "#random",
-                    icon_emoji = ":bust_in_silhouette:",
                     username = "SlackCommander",
-                    text = "*Test*"
-                }, token: appSettings.Get("slack:responseToken"));
+                    icon_emoji = ":bust_in_silhouette:",
+                    channel = "@" + command.user_name
+                };
+                if (personResult.Status != 200 ||
+                    personResult.Likelihood < 0.7)
+                {
+                    slackMessage.text = string.Format(
+                        "Unfortunately I'm unable to find any reliable information on who *{0}* is. " +
+                        "I suggest you try <https://google.com/q={0}|Google>.",
+                        command.text);
+                }
+                else
+                {
+                    slackMessage.text = string.Format("Likelihood: *{0}*", personResult.Likelihood.ToString("F2"));
+                }
+
+                // Post message to Slack
+                var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
+                await slackApi.SendMessage(slackMessage, appSettings.Get("slack:responseToken"));
                 return await Task.FromResult(HttpStatusCode.OK);
             };
         }
