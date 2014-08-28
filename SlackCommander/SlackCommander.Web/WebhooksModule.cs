@@ -40,8 +40,8 @@ namespace SlackCommander.Web
                 var slackMessage = new SlackMessage
                 {
                     username = "SlackCommander",
-                    icon_emoji = ":bust_in_silhouette:",
-                    channel = "@" + command.user_name
+                    icon_emoji = ":octopus:",
+                    channel = "#random"
                 };
                 if (person.Result.Status != 200 ||
                     person.Result.Likelihood < 0.7)
