@@ -88,7 +88,7 @@ namespace SlackCommander.Web
                             text.AppendFormat("{0}\n", organization.Description);
                         }
                     }
-                    if (totalFollowers.HasValue)
+                    if (totalFollowers.HasValue && totalFollowers.Value > 0)
                     {
                         text.AppendFormat("{0} followers on social media", totalFollowers.Value);
                         if (totalFollowers > 1000)
