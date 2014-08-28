@@ -56,9 +56,12 @@ namespace SlackCommander.Web
                     var fullName = person.Result.ContactInfo.FullName;
                     var organization = person.Result.Organizations
                         .Where(o => string.IsNullOrWhiteSpace(o.EndDate))
-                        .OrderBy(o => o.IsPrimary == true)
+                        .OrderByDescending(o => o.IsPrimary == true)
                         .FirstOrDefault();
                     var totalFollowers = person.Result.SocialProfiles.Sum(profile => profile.Followers);
+                    var photo = person.Result.Photos
+                        .OrderByDescending(p => p.IsPrimary == true)
+                        .FirstOrDefault();
 
                     var text = new StringBuilder();
                     text.AppendFormat(
@@ -66,16 +69,27 @@ namespace SlackCommander.Web
                         command.text, 
                         person.Result.Likelihood);
 
-                    text.AppendFormat("Name: *{0}*\n", person.Result.ContactInfo.FullName ?? "unknown");
-                    text.AppendFormat("Work: *{0}*\n", organization != null ? organization.Description : "unknown");
+                    if (!fullName.Missing())
+                    {
+                        text.AppendFormat("*{0}*\n", fullName);
+                    }
+                    if (organization != null &&
+                        !organization.Description.Missing())
+                    {
+                        text.AppendFormat("{0}\n", organization.Description);
+                    }
                     if (totalFollowers.HasValue)
                     {
-                        text.AppendFormat("Followers: *{0}*", totalFollowers.Value);
+                        text.AppendFormat("{0} followers on social media", totalFollowers.Value);
                         if (totalFollowers > 1000)
                         {
                             text.Append(" (wow!)");
                         }
                         text.Append("\n");
+                    }
+                    if (photo != null)
+                    {
+                        text.AppendFormat("<{0}|Profile photo>\n", photo.Url);
                     }
 
                     slackMessage.text = text.ToString().TrimEnd('\n');

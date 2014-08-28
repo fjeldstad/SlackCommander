@@ -108,7 +108,11 @@ namespace SlackCommander.Web
                     {
                         return Title;
                     }
-                    return Name;
+                    if (!Name.Missing())
+                    {
+                        return Name;
+                    }
+                    return string.Empty;
                 }
             }
         }
