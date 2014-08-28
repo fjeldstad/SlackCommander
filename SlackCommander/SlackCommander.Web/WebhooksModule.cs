@@ -49,7 +49,7 @@ namespace SlackCommander.Web
                 {
                     slackMessage.text = string.Format(
                         "Unfortunately I'm unable to find any reliable information on who *{0}* is. " +
-                        "I suggest you try <https://google.com/?q={1}#q={1}|Google>.",
+                        "I suggest you try <https://www.google.com/search?q={1}|Google>.",
                         command.text,
                         HttpUtility.UrlEncode(command.text));
                 }
