@@ -95,6 +95,7 @@ namespace SlackCommander.Web
             public string StartDate { get; set; } // YYYY-MM
             public string EndDate { get; set; }   // YYYY-MM
             public bool? IsPrimary { get; set; }
+            public bool? Current { get; set; }
 
             public string Description
             {

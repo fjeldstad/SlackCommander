@@ -54,10 +54,10 @@ namespace SlackCommander.Web
                 else
                 {
                     var fullName = person.Result.ContactInfo.FullName;
-                    var organization = person.Result.Organizations
-                        .Where(o => string.IsNullOrWhiteSpace(o.EndDate))
-                        .OrderByDescending(o => o.IsPrimary == true)
-                        .FirstOrDefault();
+                    var location = person.Result.Demographics.LocationGeneral;
+                    var currentOrganizations = person.Result.Organizations
+                        .Where(o => string.IsNullOrWhiteSpace(o.EndDate) || o.Current == true)
+                        .OrderByDescending(o => o.IsPrimary == true);
                     var totalFollowers = person.Result.SocialProfiles.Sum(profile => profile.Followers);
                     var photo = person.Result.Photos
                         .OrderByDescending(p => p.IsPrimary == true)
@@ -71,12 +71,20 @@ namespace SlackCommander.Web
 
                     if (!fullName.Missing())
                     {
-                        text.AppendFormat("*{0}*\n", fullName);
+                        text.AppendFormat("*{0}*", fullName);
+                        if (!location.Missing())
+                        {
+                            text.AppendFormat(" _{0}_", location);
+                        }
+                        text.Append("\n");
                     }
-                    if (organization != null &&
-                        !organization.Description.Missing())
+                    foreach (var organization in currentOrganizations)
                     {
-                        text.AppendFormat("{0}\n", organization.Description);
+                        if (organization != null &&
+                            !organization.Description.Missing())
+                        {
+                            text.AppendFormat("{0}\n", organization.Description);
+                        }
                     }
                     if (totalFollowers.HasValue)
                     {
