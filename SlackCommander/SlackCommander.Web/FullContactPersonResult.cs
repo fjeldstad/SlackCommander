@@ -7,6 +7,16 @@ using Nancy;
 
 namespace SlackCommander.Web
 {
+    public class WrappedFullContactPersonResult
+    {
+        public FullContactPersonResult Result { get; set; }
+
+        public WrappedFullContactPersonResult()
+        {
+            Result = new FullContactPersonResult();
+        }
+    }
+
     public class FullContactPersonResult
     {
         public string WebhookId { get; set; }
