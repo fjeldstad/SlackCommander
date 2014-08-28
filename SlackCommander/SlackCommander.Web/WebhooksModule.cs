@@ -48,7 +48,7 @@ namespace SlackCommander.Web
                 {
                     slackMessage.text = string.Format(
                         "Unfortunately I'm unable to find any reliable information on who *{0}* is. " +
-                        "I suggest you try <https://google.com/&q={0}#q={0}|Google>.",
+                        "I suggest you try <https://google.com/?q={0}#q={0}|Google>.",
                         command.text);
                 }
                 else
