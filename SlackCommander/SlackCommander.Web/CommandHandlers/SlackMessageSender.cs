@@ -20,7 +20,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected void Send(SendMessageToSlack message)
         {
-            new Exception("Sending message to Slack.");
+            new Exception("Sending message to Slack.").ToExceptionless().Submit();
             var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slack:responseBaseUrl"));
             slackApi.SendMessage(
                 new MessageToSlack
