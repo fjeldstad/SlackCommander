@@ -32,6 +32,8 @@ namespace SlackCommander.Web
             {
                 subscriber.RegisterSubscriptions(hub);
             }
+
+            StaticConfiguration.DisableErrorTraces = false;
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
