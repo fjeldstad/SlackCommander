@@ -67,7 +67,6 @@ namespace SlackCommander.Web.FullContact
                 }
 
                 // Post message
-                new Exception("Requesting message to be sent to Slack.").ToExceptionless().Submit();
                 hub.PublishAsync(new TinyMessage<SendMessageToSlack>(slackMessage));
                 return HttpStatusCode.OK;
             };
