@@ -125,6 +125,7 @@
     <Content Include="packages.config" />
     <Content Include="Secret.template.config" />
     <Content Include="Secret.config" />
+    <None Include="Properties\PublishProfiles\Localhost.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

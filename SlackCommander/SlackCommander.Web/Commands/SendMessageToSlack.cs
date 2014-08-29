@@ -5,6 +5,7 @@ using System.Web;
 
 namespace SlackCommander.Web.Commands
 {
+    [Serializable]
     public class SendMessageToSlack : ICommand
     {
         public string Channel { get; set; }
