@@ -21,7 +21,7 @@ namespace SlackCommander.Web.FullContact
             IPendingCommands pendingCommands, 
             ITinyMessengerHub hub/*, IMailgunWebhooks mailgunWebhooks */)
         {
-            Post["/webhooks/fullcontact/person", runAsync: true] = async (_, ct) =>
+            Post["/webhooks/fullcontact/person"] = _ =>
             {
                 // Parse the request data
                 var person = this.BindTo(new FullContactPersonResult());
@@ -41,6 +41,7 @@ namespace SlackCommander.Web.FullContact
                 {
                     return HttpStatusCode.BadRequest.WithReason("No pending command matching the webhookId could be found.");
                 }
+                pendingCommands.Remove(person.WebhookId);
 
                 // Prepare message text
                 var slackMessage = new SendMessageToSlack

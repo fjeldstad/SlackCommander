@@ -18,5 +18,10 @@ namespace SlackCommander.Web
         {
             return MemoryCache.Default.Get(id) as ICommand;
         }
+
+        public void Remove(string id)
+        {
+            MemoryCache.Default.Remove(id);
+        }
     }
 }
