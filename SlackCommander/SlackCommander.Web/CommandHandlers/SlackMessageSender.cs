@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Exceptionless;
 using Refit;
 using SlackCommander.Web.Commands;
 using TinyMessenger;
@@ -19,6 +20,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected void Send(SendMessageToSlack message)
         {
+            new Exception("Sending message to Slack.");
             var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slack:responseBaseUrl"));
             slackApi.SendMessage(
                 new MessageToSlack
@@ -33,6 +35,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
         {
+            new Exception("Subscribing to TinyMessage<SendMessageToSlack>.").ToExceptionless().Submit();
             yield return hub.Subscribe<TinyMessage<SendMessageToSlack>>(message => Send(message.Content));
         }
     }

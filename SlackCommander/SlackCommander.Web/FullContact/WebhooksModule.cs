@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Exceptionless;
 using Nancy;
 using Nancy.Helpers;
 using Nancy.ModelBinding;
@@ -65,6 +66,7 @@ namespace SlackCommander.Web.FullContact
                 }
 
                 // Post message
+                new Exception("Requesting message to be sent to Slack.").ToExceptionless().Submit();
                 hub.PublishAsync(new TinyMessage<SendMessageToSlack>(slackMessage));
                 return HttpStatusCode.OK;
             };
