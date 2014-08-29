@@ -35,7 +35,7 @@ namespace SlackCommander.Web.SlashCommands
                 }
                 catch (InvalidSlashCommandException ex)
                 {
-                    return HttpStatusCode.BadRequest.WithReason(ex.Message);
+                    return ex.Message;
                 }
             };
         }
