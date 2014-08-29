@@ -27,18 +27,18 @@ namespace SlackCommander.Web.FullContact
                 if (person == null || 
                     person.Result == null)
                 {
-                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("Unable to parse request body."));
+                    return HttpStatusCode.BadRequest.WithReason("Unable to parse request body.");
                 }
 
                 // Get the pending command that corresponds to the posted data
                 if (string.IsNullOrWhiteSpace(person.WebhookId))
                 {
-                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("The webhookId property is missing from the request body."));
+                    return HttpStatusCode.BadRequest.WithReason("The webhookId property is missing from the request body.");
                 }
                 var command = pendingCommands.Get(person.WebhookId) as Whois;
                 if (command == null)
                 {
-                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason("No pending command matching the webhookId could be found."));
+                    return HttpStatusCode.BadRequest.WithReason("No pending command matching the webhookId could be found.");
                 }
 
                 // Prepare message text
@@ -66,7 +66,7 @@ namespace SlackCommander.Web.FullContact
 
                 // Post message
                 hub.PublishAsync(new TinyMessage<SendMessageToSlack>(slackMessage));
-                return await Task.FromResult(HttpStatusCode.OK);
+                return HttpStatusCode.OK;
             };
 
             //Post["/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
@@ -74,12 +74,12 @@ namespace SlackCommander.Web.FullContact
             //    var webhookId = _.webhookId as string;
             //    if (webhookId.Missing())
             //    {
-            //        return await Task.FromResult(HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing."));
+            //        return HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing.");
             //    }
             //    var webhook = mailgunWebhooks.Get(webhookId);
             //    if (webhook == null)
             //    {
-            //        return await Task.FromResult(HttpStatusCode.NotAcceptable.WithReason("The webhook does not exist."));
+            //        return HttpStatusCode.NotAcceptable.WithReason("The webhook does not exist.");
             //    }
 
             //    // Prepare message
@@ -91,7 +91,7 @@ namespace SlackCommander.Web.FullContact
             //    // Post message to Slack
             //    var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
             //    await slackApi.SendMessage(slackMessage, appSettings.Get("slack:responseToken"));
-            //    return await Task.FromResult(HttpStatusCode.OK);
+            //    return HttpStatusCode.OK;
             //};
         }
     }
