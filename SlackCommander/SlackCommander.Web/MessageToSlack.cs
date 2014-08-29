@@ -5,7 +5,7 @@ using System.Web;
 
 namespace SlackCommander.Web
 {
-    public class SlackMessage
+    public class MessageToSlack
     {
         public string username { get; set; }
         public string icon_url { get; set; }

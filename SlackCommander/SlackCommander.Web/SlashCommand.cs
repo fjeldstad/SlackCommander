@@ -8,7 +8,7 @@ using Nancy.TinyIoc;
 namespace SlackCommander.Web
 {
     [Serializable]
-    public class Command
+    public class SlashCommand
     {
         public string team_id { get; set; }
         public string channel_id { get; set; }

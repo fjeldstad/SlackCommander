@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SlackCommander.Web
 {
-    public interface ICommandHandler
+    public interface ISlashCommandHandler
     {
-        Task<dynamic> Handle(Command command);
+        Task<dynamic> Handle(SlashCommand command);
     }
 }

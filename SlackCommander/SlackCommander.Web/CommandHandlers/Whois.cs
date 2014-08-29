@@ -8,7 +8,7 @@ using Refit;
 
 namespace SlackCommander.Web.CommandHandlers
 {
-    public class Whois : ICommandHandler
+    public class Whois : ISlashCommandHandler
     {
         private readonly string _fullContactApiBaseUrl;
         private readonly string _fullContactApiKey;
@@ -23,7 +23,7 @@ namespace SlackCommander.Web.CommandHandlers
             _pendingCommands = pendingCommands;
         }
 
-        public async Task<dynamic> Handle(Command command)
+        public async Task<dynamic> Handle(SlashCommand command)
         {
             if (!command.text.IsValidEmail() &&
                 !command.text.CouldBeTwitterHandle())

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SlackCommander.Web
 {
-    public interface IPendingCommands
-    {
-        void Add(string id, SlashCommand command);
-        SlashCommand Get(string id);
-    }
+    //public interface IMailgunWebhooks
+    //{
+    //    MailgunWebhook Get(string id);
+    //    void Add(MailgunWebhook webhook);
+    //}
 }

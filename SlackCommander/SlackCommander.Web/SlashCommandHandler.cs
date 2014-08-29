@@ -8,22 +8,22 @@ using Nancy.TinyIoc;
 
 namespace SlackCommander.Web
 {
-    public class CommandHandler
+    public class SlashCommandHandler
     {
         private readonly TinyIoCContainer _container;
 
-        public CommandHandler(TinyIoCContainer container)
+        public SlashCommandHandler(TinyIoCContainer container)
         {
             _container = container;
         }
 
-        public Task<dynamic> Handle(Command command)
+        public Task<dynamic> Handle(SlashCommand command)
         {
-            if (!_container.CanResolve<ICommandHandler>(command.command))
+            if (!_container.CanResolve<ISlashCommandHandler>(command.command))
             {
                 return Task.FromResult((dynamic)HttpStatusCode.BadRequest);
             }
-            return _container.Resolve<ICommandHandler>(command.command).Handle(command);
+            return _container.Resolve<ISlashCommandHandler>(command.command).Handle(command);
         }
     }
 }

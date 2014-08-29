@@ -8,14 +8,14 @@ namespace SlackCommander.Web
 {
     public class InMemoryPendingCommands : IPendingCommands
     {
-        public void Add(string id, Command command)
+        public void Add(string id, SlashCommand command)
         {
             MemoryCache.Default.Set(id, command, DateTimeOffset.Now.AddMinutes(10));
         }
 
-        public Command Get(string id)
+        public SlashCommand Get(string id)
         {
-            return MemoryCache.Default.Get(id) as Command;
+            return MemoryCache.Default.Get(id) as SlashCommand;
         }
     }
 }

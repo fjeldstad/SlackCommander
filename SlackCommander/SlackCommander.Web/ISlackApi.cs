@@ -10,6 +10,6 @@ namespace SlackCommander.Web
     public interface ISlackApi
     {
         [Post("/services/hooks/incoming-webhook")]
-        Task SendMessage([Body] SlackMessage message, string token);
+        Task SendMessage([Body] MessageToSlack message, string token);
     }
 }

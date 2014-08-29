@@ -17,7 +17,7 @@ namespace SlackCommander.Web
         {
             base.ConfigureApplicationContainer(container);
 
-            container.Register<ICommandHandler, Whois>("/whois");
+            container.Register<ISlashCommandHandler, Whois>("/whois");
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)

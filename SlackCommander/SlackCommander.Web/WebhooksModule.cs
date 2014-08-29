@@ -13,7 +13,7 @@ namespace SlackCommander.Web
 {
     public class WebhooksModule : NancyModule
     {
-        public WebhooksModule(IAppSettings appSettings, IPendingCommands pendingCommands)
+        public WebhooksModule(IAppSettings appSettings, IPendingCommands pendingCommands/*, IMailgunWebhooks mailgunWebhooks */)
             : base("/webhooks")
         {
             Post["/fullcontact/person", runAsync: true] = async (_, ct) =>
@@ -38,7 +38,7 @@ namespace SlackCommander.Web
                 }
 
                 // Prepare message
-                var slackMessage = new SlackMessage
+                var slackMessage = new MessageToSlack
                 {
                     username = "SlackCommander",
                     icon_emoji = ":octopus:",
@@ -110,6 +110,31 @@ namespace SlackCommander.Web
                 await slackApi.SendMessage(slackMessage, appSettings.Get("slack:responseToken"));
                 return await Task.FromResult(HttpStatusCode.OK);
             };
+
+            //Post["/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
+            //{
+            //    var webhookId = _.webhookId as string;
+            //    if (webhookId.Missing())
+            //    {
+            //        return await Task.FromResult(HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing."));
+            //    }
+            //    var webhook = mailgunWebhooks.Get(webhookId);
+            //    if (webhook == null)
+            //    {
+            //        return await Task.FromResult(HttpStatusCode.NotAcceptable.WithReason("The webhook does not exist."));
+            //    }
+
+            //    // Prepare message
+            //    var slackMessage = new MessageToSlack
+            //    {
+                    
+            //    }
+
+            //    // Post message to Slack
+            //    var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
+            //    await slackApi.SendMessage(slackMessage, appSettings.Get("slack:responseToken"));
+            //    return await Task.FromResult(HttpStatusCode.OK);
+            //};
         }
     }
 }
