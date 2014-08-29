@@ -5,18 +5,15 @@ using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Extensions;
 using Nancy.Helpers;
-using Nancy.Json;
 using Nancy.TinyIoc;
-using NLog;
 using SlackCommander.Web.SlashCommands;
 using TinyMessenger;
+using Exceptionless;
 
 namespace SlackCommander.Web
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
@@ -29,14 +26,15 @@ namespace SlackCommander.Web
         {
             base.ApplicationStartup(container, pipelines);
 
+            // Log exceptions to Exceptionless
+            ExceptionlessClient.Current.RegisterNancy(pipelines);
+
             // Register subscriptions
             var hub = container.Resolve<ITinyMessengerHub>();
             foreach (var subscriber in container.ResolveAll<ISubscriber>())
             {
                 subscriber.RegisterSubscriptions(hub);
             }
-
-            StaticConfiguration.DisableErrorTraces = false;
         }
 
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)

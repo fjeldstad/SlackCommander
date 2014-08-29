@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using NLog;
 using Refit;
 using SlackCommander.Web.Commands;
 using TinyMessenger;
@@ -11,7 +10,6 @@ namespace SlackCommander.Web.CommandHandlers
 {
     public class SlackMessageSender : SubscriberBase
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IAppSettings _appSettings;
 
         public SlackMessageSender(IAppSettings appSettings)
@@ -35,7 +33,6 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
         {
-            Log.Debug("Subscribing to TinyMessage<SendMessageToSlack>");
             yield return hub.Subscribe<TinyMessage<SendMessageToSlack>>(message => Send(message.Content));
         }
     }
