@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SlackCommander.Web
+namespace SlackCommander.Web.Commands
 {
-    public interface ISlashCommandHandler
+    public interface ICommand
     {
-        Task<dynamic> Handle(SlashCommand command);
     }
 }

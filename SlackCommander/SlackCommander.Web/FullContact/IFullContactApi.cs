@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Refit;
 
-namespace SlackCommander.Web
+namespace SlackCommander.Web.FullContact
 {
     public interface IFullContactApi
     {

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI.WebControls.Expressions;
 using Nancy;
 
-namespace SlackCommander.Web
+namespace SlackCommander.Web.FullContact
 {
     public class FullContactPersonResult
     {

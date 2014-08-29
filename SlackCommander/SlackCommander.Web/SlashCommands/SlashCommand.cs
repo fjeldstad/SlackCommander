@@ -5,7 +5,7 @@ using System.Web;
 using Nancy;
 using Nancy.TinyIoc;
 
-namespace SlackCommander.Web
+namespace SlackCommander.Web.SlashCommands
 {
     [Serializable]
     public class SlashCommand

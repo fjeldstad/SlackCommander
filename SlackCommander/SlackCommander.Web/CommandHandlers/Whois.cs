@@ -5,10 +5,14 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using Refit;
+using SlackCommander.Web.Commands;
+using SlackCommander.Web.FullContact;
+using SlackCommander.Web.SlashCommands;
+using TinyMessenger;
 
 namespace SlackCommander.Web.CommandHandlers
 {
-    public class Whois : ISlashCommandHandler
+    public class Whois : SubscriberBase
     {
         private readonly string _fullContactApiBaseUrl;
         private readonly string _fullContactApiKey;
@@ -23,41 +27,51 @@ namespace SlackCommander.Web.CommandHandlers
             _pendingCommands = pendingCommands;
         }
 
-        public async Task<dynamic> Handle(SlashCommand command)
+        protected string InitiateLookup(WhoisEmail command)
         {
-            if (!command.text.IsValidEmail() &&
-                !command.text.CouldBeTwitterHandle())
-            {
-                return "Sorry, I'm only able to work with e-mail addresses and Twitter handles.";
-            }
-
             var commandId = Guid.NewGuid().ToString();
             var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try
             {
-                if (command.text.IsValidEmail())
-                {
-                    await fullContactApi.LookupByEmail(
-                        command.text, 
-                        _fullContactWebhookUrl, 
-                        commandId, 
-                        _fullContactApiKey);
-                }
-                else
-                {
-                    await fullContactApi.LookupByTwitterHandle(
-                        command.text.TrimStart('@'), 
+                fullContactApi.LookupByEmail(
+                        command.EmailAddress,
                         _fullContactWebhookUrl,
-                        commandId, 
-                        _fullContactApiKey);
-                }
+                        commandId,
+                        _fullContactApiKey).Wait();
                 _pendingCommands.Add(commandId, command);
-                return string.Format("Looking up *{0}*, give me a few moments...", command.text);
+                return string.Format("Looking up *{0}*, give me a few moments...", command.EmailAddress);
             }
             catch
             {
                 return string.Format("There was a problem with the lookup. I'm sorry.");
             }
+        }
+
+        protected string InitiateLookup(WhoisTwitter command)
+        {
+            var commandId = Guid.NewGuid().ToString();
+            var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
+            try
+            {
+                fullContactApi.LookupByTwitterHandle(
+                        command.TwitterHandle,
+                        _fullContactWebhookUrl,
+                        commandId,
+                        _fullContactApiKey).Wait();
+                _pendingCommands.Add(commandId, command);
+                return string.Format("Looking up *{0}*, give me a few moments...", command.TwitterHandle);
+            }
+            catch
+            {
+                return string.Format("There was a problem with the lookup. I'm sorry.");
+            }
+        }
+
+        protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
+        {
+            yield return hub.Subscribe<TinyMessageWithResponseText<ICommand>>(
+                deliveryAction: message => message.SetResponseText(InitiateLookup((dynamic)message.Content)),
+                messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);
         }
     }
 }
