@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI.WebControls.Expressions;
-using Nancy;
-
-namespace SlackCommander.Web.FullContact
+﻿namespace SlackCommander.Web.FullContact
 {
     public class FullContactPersonResult
     {

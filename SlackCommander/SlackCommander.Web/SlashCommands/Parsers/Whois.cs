@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.UI.WebControls;
-using Refit;
-using SlackCommander.Web.Commands;
-using SlackCommander.Web.SlashCommands;
+﻿using SlackCommander.Web.Commands;
 
 namespace SlackCommander.Web.SlashCommands.Parsers
 {

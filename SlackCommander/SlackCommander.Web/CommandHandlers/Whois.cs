@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Threading.Tasks;
-using System.Web;
 using Refit;
 using SlackCommander.Web.Commands;
 using SlackCommander.Web.FullContact;
-using SlackCommander.Web.SlashCommands;
 using TinyMessenger;
 
 namespace SlackCommander.Web.CommandHandlers

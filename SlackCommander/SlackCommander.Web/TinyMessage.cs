@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using SlackCommander.Web.Commands;
-using TinyMessenger;
+﻿using TinyMessenger;
 
 namespace SlackCommander.Web
 {

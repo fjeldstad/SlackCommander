@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;

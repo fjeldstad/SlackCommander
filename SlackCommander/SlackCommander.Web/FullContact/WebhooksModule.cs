@@ -1,14 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Exceptionless;
-using Nancy;
+﻿using Nancy;
 using Nancy.Helpers;
 using Nancy.ModelBinding;
-using Nancy.Security;
-using Newtonsoft.Json;
-using Refit;
 using SlackCommander.Web.Commands;
 using TinyMessenger;
 
