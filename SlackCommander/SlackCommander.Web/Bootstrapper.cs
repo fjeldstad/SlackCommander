@@ -7,6 +7,7 @@ using Nancy.Extensions;
 using Nancy.Helpers;
 using Nancy.Json;
 using Nancy.TinyIoc;
+using NLog;
 using SlackCommander.Web.SlashCommands;
 using TinyMessenger;
 
@@ -14,6 +15,8 @@ namespace SlackCommander.Web
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
