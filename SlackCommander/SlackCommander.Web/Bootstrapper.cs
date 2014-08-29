@@ -30,8 +30,7 @@ namespace SlackCommander.Web
 
             // Register subscriptions
             var hub = container.Resolve<ITinyMessengerHub>();
-            var subscribers = container.ResolveAll<ISubscriber>().DistinctBy(s => s.GetType().FullName);
-            foreach (var subscriber in subscribers)
+            foreach (var subscriber in container.ResolveAll<ISubscriber>(includeUnnamed: false))
             {
                 subscriber.RegisterSubscriptions(hub);
             }
