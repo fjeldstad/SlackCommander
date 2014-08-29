@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using Nancy;
 using Nancy.Authentication.Stateless;
@@ -31,7 +32,8 @@ namespace SlackCommander.Web
 
             // Register subscriptions
             var hub = container.Resolve<ITinyMessengerHub>();
-            foreach (var subscriber in container.ResolveAll<ISubscriber>())
+            var subscribers = container.ResolveAll<ISubscriber>().DistinctBy(s => s.GetType().FullName);
+            foreach (var subscriber in subscribers)
             {
                 subscriber.RegisterSubscriptions(hub);
             }
