@@ -33,7 +33,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
         {
-            yield return hub.Subscribe<GenericTinyMessage<SendMessageToSlack>>(message => Send(message.Content));
+            yield return hub.Subscribe<TinyMessage<SendMessageToSlack>>(message => Send(message.Content));
         }
     }
 }

@@ -108,6 +108,7 @@
     <Compile Include="MessageToSlack.cs" />
     <Compile Include="SlashCommands\SlashCommandParsers.cs" />
     <Compile Include="SubscriberBase.cs" />
+    <Compile Include="TinyMessage.cs" />
     <Compile Include="TinyMessageWithResponseText.cs" />
     <Compile Include="TinyMessenger.cs" />
     <Compile Include="TinyMessengerHubExtensions.cs" />

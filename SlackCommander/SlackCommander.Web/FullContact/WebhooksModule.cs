@@ -65,7 +65,7 @@ namespace SlackCommander.Web.FullContact
                 }
 
                 // Post message
-                hub.PublishAsync(new GenericTinyMessage<SendMessageToSlack>(null, slackMessage));
+                hub.PublishAsync(new TinyMessage<SendMessageToSlack>(slackMessage));
                 return await Task.FromResult(HttpStatusCode.OK);
             };
 
