@@ -19,7 +19,7 @@ namespace SlackCommander.Web.SlashCommands
                 var parser = parsers.For(slashCommand);
                 if (parser == null)
                 {
-                    return Task.FromResult(HttpStatusCode.BadRequest.WithReason(
+                    return await Task.FromResult(HttpStatusCode.BadRequest.WithReason(
                         string.Format("The command '{0}' is not supported.", slashCommand.command)));
                 }
                 try
@@ -29,9 +29,9 @@ namespace SlackCommander.Web.SlashCommands
                     await hub.PublishAsyncUsingTask(new TinyMessageWithResponseText<ICommand>(command, s => responseText = s));
                     if (responseText.Missing())
                     {
-                        return Task.FromResult(HttpStatusCode.OK);
+                        return await Task.FromResult(HttpStatusCode.OK);
                     }
-                    return Task.FromResult(responseText);
+                    return await Task.FromResult(responseText);
                 }
                 catch (InvalidSlashCommandException ex)
                 {
