@@ -15,7 +15,7 @@ namespace SlackCommander.Web.Mailgun
     {
         public WebhooksModule(ITinyMessengerHub hub, IMailgunWebhooks mailgunWebhooks)
         {
-            Post["/webhooks/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
+            Post["/webhooks/mailgun/{webhookId}"] = _ =>
             {
                 Request.Body.Position = 0;
                 var rawBody = new StreamReader(Request.Body).ReadToEndAsync();
@@ -40,9 +40,7 @@ namespace SlackCommander.Web.Mailgun
                 if (subject.StartsWith("[TinyLetter] You have a new subscriber"))
                 {
                     const string subscriberLinePattern = "Someone just subscribed to your newsletter:";
-                    strippedText = strippedText.NormalizeLineEndings();
                     var lines = strippedText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                    return string.Join("|", lines);
                     var subscriberLine = lines.FirstOrDefault(line => line.Trim().StartsWith(subscriberLinePattern));
                     if (subscriberLine != null)
                     {
@@ -58,7 +56,7 @@ namespace SlackCommander.Web.Mailgun
                         }
                     }
                 }
-                return strippedText;
+                return HttpStatusCode.OK;
             };
         }
     }

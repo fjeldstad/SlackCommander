@@ -12,7 +12,7 @@ namespace SlackCommander.Web.Mailgun
             return new MailgunWebhook
             {
                 Id = id,
-                SlackChannel = "@slackbot"
+                SlackChannel = "@hihaj"
             };
         }
 
