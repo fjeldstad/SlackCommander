@@ -50,6 +50,13 @@ namespace SlackCommander.Web.Mailgun
                         var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
                         if (newSubscriber.IsValidEmail())
                         {
+                            Log.Debug("Notifying {0} of the new subscriber.", newSubscriber);
+                            hub.Publish(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
+                            {
+                                Channel = webhook.SlackChannel,
+                                Text = string.Format("*{0}* just signed up for the Unsampler beta! :tada:")
+                            }));
+
                             Log.Debug("Publishing Whois command for '{0}'.", newSubscriber);
                             hub.Publish(new TinyMessage<ICommand>(new WhoisEmail
                             {
