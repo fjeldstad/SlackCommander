@@ -26,7 +26,7 @@ namespace SlackCommander.Web.Mailgun
                 }
 
 
-                return Request.Form["stripped-text"];
+                return Request.Form;
             };
         }
     }
