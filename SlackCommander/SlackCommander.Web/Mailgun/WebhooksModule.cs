@@ -45,6 +45,7 @@ namespace SlackCommander.Web.Mailgun
                     var subscriberLine = lines.FirstOrDefault(line => line.StartsWith(subscriberLinePattern));
                     if (subscriberLine != null)
                     {
+                        return subscriberLine;
                         var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
                         if (newSubscriber.IsValidEmail())
                         {
@@ -57,7 +58,7 @@ namespace SlackCommander.Web.Mailgun
                         }
                     }
                 }
-                return HttpStatusCode.OK;
+                return strippedText;
             };
         }
     }
