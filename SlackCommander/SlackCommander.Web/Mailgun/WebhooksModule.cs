@@ -20,6 +20,9 @@ namespace SlackCommander.Web.Mailgun
             Post["/webhooks/mailgun/{webhookId}"] = _ =>
             {
                 Log.Debug("Received webhook call from Mailgun.");
+
+                // TODO Verify signature
+
                 var webhookId = (string)_.webhookId;
                 if (webhookId.Missing())
                 {
