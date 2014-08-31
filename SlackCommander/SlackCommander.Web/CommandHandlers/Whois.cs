@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NLog;
 using Refit;
 using SlackCommander.Web.Commands;
 using SlackCommander.Web.FullContact;
@@ -9,6 +10,7 @@ namespace SlackCommander.Web.CommandHandlers
 {
     public class Whois : SubscriberBase
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly string _fullContactApiBaseUrl;
         private readonly string _fullContactApiKey;
         private readonly string _fullContactWebhookUrl;
@@ -24,6 +26,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected string InitiateLookup(WhoisEmail command)
         {
+            Log.Debug("Initiating whois lookup for e-mail address '{0}'", command.EmailAddress);
             var commandId = Guid.NewGuid().ToString();
             var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try
@@ -44,6 +47,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected string InitiateLookup(WhoisTwitter command)
         {
+            Log.Debug("Initiating whois lookup for Twitter handle '{0}'", command.TwitterHandle);
             var commandId = Guid.NewGuid().ToString();
             var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try

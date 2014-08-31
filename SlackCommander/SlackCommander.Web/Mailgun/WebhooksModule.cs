@@ -13,7 +13,7 @@ namespace SlackCommander.Web.Mailgun
 {
     public class WebhooksModule : NancyModule
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public WebhooksModule(ITinyMessengerHub hub, IMailgunWebhooks mailgunWebhooks)
         {
@@ -44,6 +44,7 @@ namespace SlackCommander.Web.Mailgun
                         var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
                         if (newSubscriber.IsValidEmail())
                         {
+                            Log.Debug("Publishing Whois command for '{0}'.", newSubscriber);
                             hub.Publish(new TinyMessage<ICommand>(new WhoisEmail
                             {
                                 EmailAddress = newSubscriber,
