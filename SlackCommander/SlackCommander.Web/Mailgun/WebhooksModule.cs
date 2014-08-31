@@ -41,11 +41,11 @@ namespace SlackCommander.Web.Mailgun
                 {
                     const string subscriberLinePattern = "Someone just subscribed to your newsletter:";
                     strippedText = strippedText.NormalizeLineEndings();
+                    return subscriberLinePattern;
                     var lines = strippedText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                     var subscriberLine = lines.FirstOrDefault(line => line.StartsWith(subscriberLinePattern));
                     if (subscriberLine != null)
                     {
-                        return subscriberLine;
                         var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
                         if (newSubscriber.IsValidEmail())
                         {
