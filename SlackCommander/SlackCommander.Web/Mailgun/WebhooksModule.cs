@@ -50,7 +50,7 @@ namespace SlackCommander.Web.Mailgun
                         var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
                         if (newSubscriber.IsValidEmail())
                         {
-                            Log.Debug("Notifying {0} of the new subscriber '{0}'.", webhook.SlackChannel, newSubscriber);
+                            Log.Debug("Notifying {0} of the new subscriber '{1}'.", webhook.SlackChannel, newSubscriber);
                             await hub.PublishAsyncUsingTask(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
                             {
                                 Channel = webhook.SlackChannel,
