@@ -7,13 +7,29 @@ namespace SlackCommander.Web.Mailgun
 {
     public class DummyMailgunWebhooks : IMailgunWebhooks
     {
+        private readonly IAppSettings _appSettings;
+
+        public DummyMailgunWebhooks(IAppSettings appSettings)
+        {
+            if (appSettings == null)
+            {
+                throw new ArgumentNullException("appSettings");
+            }
+            _appSettings = appSettings;
+        }
+
         public MailgunWebhook Get(string id)
         {
-            return new MailgunWebhook
+            if (!id.Missing() &&
+                id.Equals(_appSettings.Get("mailgun:webhookId"), StringComparison.Ordinal))
             {
-                Id = id,
-                SlackChannel = "@hihaj"
-            };
+                return new MailgunWebhook
+                {
+                    Id = id,
+                    SlackChannel = "#dev"
+                };
+            }
+            return null;
         }
 
         public void Add(MailgunWebhook webhook)
