@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using NLog;
 using Refit;
 using SlackCommander.Web.Commands;
 using TinyMessenger;
@@ -10,6 +11,7 @@ namespace SlackCommander.Web.CommandHandlers
 {
     public class SlackMessageSender : SubscriberBase
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IAppSettings _appSettings;
 
         public SlackMessageSender(IAppSettings appSettings)
@@ -19,6 +21,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected void Send(SendMessageToSlack message)
         {
+            Log.Debug("Sending message to Slack ({0}: {1})", message.Channel, message.Text);
             var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slack:responseBaseUrl"));
             slackApi.SendMessage(
                 new MessageToSlack

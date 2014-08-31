@@ -38,6 +38,7 @@ namespace SlackCommander.Web.CommandHandlers
                         commandId,
                         _fullContactApiKey).Wait();
                 _pendingCommands.Add(commandId, command);
+                Log.Debug("Lookup for e-mail address '{0}' is pending.", command.EmailAddress);
                 return string.Format("Looking up *{0}*, give me a few moments...", command.EmailAddress);
             }
             catch
@@ -59,6 +60,7 @@ namespace SlackCommander.Web.CommandHandlers
                         commandId,
                         _fullContactApiKey).Wait();
                 _pendingCommands.Add(commandId, command);
+                Log.Debug("Lookup for Twitter handle '{0}' is pending.", command.TwitterHandle);
                 return string.Format("Looking up *{0}*, give me a few moments...", command.TwitterHandle);
             }
             catch
@@ -72,6 +74,7 @@ namespace SlackCommander.Web.CommandHandlers
             yield return hub.Subscribe<TinyMessageWithResponseText<ICommand>>(
                 deliveryAction: message => message.SetResponseText(InitiateLookup((dynamic)message.Content)),
                 messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);
+
             yield return hub.Subscribe<TinyMessage<ICommand>>(
                 deliveryAction: message => InitiateLookup((dynamic)message.Content),
                 messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);

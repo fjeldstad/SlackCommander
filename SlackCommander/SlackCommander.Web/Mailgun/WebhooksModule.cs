@@ -23,11 +23,13 @@ namespace SlackCommander.Web.Mailgun
                 var webhookId = (string)_.webhookId;
                 if (webhookId.Missing())
                 {
+                    Log.Info("Rejected webhook call from Mailgun (WebhookId is missing).");
                     return HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing.");
                 }
                 var webhook = mailgunWebhooks.Get(webhookId);
                 if (webhook == null)
                 {
+                    Log.Info("Rejected webhook call from Mailgun (webhook '{0}' not found).", webhookId);
                     return HttpStatusCode.NotAcceptable.WithReason("The webhook does not exist.");
                 }
 
@@ -36,6 +38,7 @@ namespace SlackCommander.Web.Mailgun
                 var strippedText = (string)Request.Form["stripped-text"];
                 if (subject.StartsWith("[TinyLetter] You have a new subscriber"))
                 {
+                    Log.Debug("Incoming e-mail is a notification from TinyLetter (new subscriber).");
                     const string subscriberLinePattern = "Someone just subscribed to your newsletter:";
                     var lines = strippedText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                     var subscriberLine = lines.FirstOrDefault(line => line.Trim().StartsWith(subscriberLinePattern));
