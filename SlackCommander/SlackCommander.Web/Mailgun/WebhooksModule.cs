@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
+using Exceptionless.Extensions;
 using Nancy;
 using Refit;
+using SlackCommander.Web.Commands;
 using TinyMessenger;
 
 namespace SlackCommander.Web.Mailgun
@@ -14,6 +17,12 @@ namespace SlackCommander.Web.Mailgun
         {
             Post["/webhooks/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
             {
+                Request.Body.Position = 0;
+                var rawBody = new StreamReader(Request.Body).ReadToEndAsync();
+                Request.Body.Position = 0;
+                
+
+
                 var webhookId = (string)_.webhookId;
                 if (webhookId.Missing())
                 {
@@ -28,7 +37,26 @@ namespace SlackCommander.Web.Mailgun
                 // TODO Refactor this - should parse e-mail + invoke handlers in separate component(s)
                 var subject = (string)Request.Form["subject"];
                 var strippedText = (string)Request.Form["stripped-text"];
-                return subject;
+                if (subject.StartsWith("[TinyLetter] You have a new subscriber"))
+                {
+                    const string subscriberLinePattern = "Someone just subscribed to your newsletter:";
+                    strippedText = strippedText.NormalizeLineEndings();
+                    var lines = strippedText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    var subscriberLine = lines.FirstOrDefault(line => line.StartsWith(subscriberLinePattern));
+                    if (subscriberLine != null)
+                    {
+                        var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
+                        if (newSubscriber.IsValidEmail())
+                        {
+                            hub.Publish(new TinyMessage<ICommand>(new WhoisEmail
+                            {
+                                EmailAddress = newSubscriber,
+                                RequestedByUser = null,
+                                RespondToChannel = webhook.SlackChannel
+                            }));
+                        }
+                    }
+                }
                 return HttpStatusCode.OK;
             };
         }
