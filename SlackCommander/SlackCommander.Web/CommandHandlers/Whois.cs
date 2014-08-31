@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NLog;
 using Refit;
 using SlackCommander.Web.Commands;
@@ -70,6 +71,9 @@ namespace SlackCommander.Web.CommandHandlers
         {
             yield return hub.Subscribe<TinyMessageWithResponseText<ICommand>>(
                 deliveryAction: message => message.SetResponseText(InitiateLookup((dynamic)message.Content)),
+                messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);
+            yield return hub.Subscribe<TinyMessage<ICommand>>(
+                deliveryAction: message => InitiateLookup((dynamic)message.Content),
                 messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);
         }
     }
