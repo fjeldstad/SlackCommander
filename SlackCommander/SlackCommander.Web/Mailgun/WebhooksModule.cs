@@ -17,12 +17,6 @@ namespace SlackCommander.Web.Mailgun
         {
             Post["/webhooks/mailgun/{webhookId}"] = _ =>
             {
-                Request.Body.Position = 0;
-                var rawBody = new StreamReader(Request.Body).ReadToEndAsync();
-                Request.Body.Position = 0;
-                
-
-
                 var webhookId = (string)_.webhookId;
                 if (webhookId.Missing())
                 {
@@ -50,7 +44,7 @@ namespace SlackCommander.Web.Mailgun
                             hub.Publish(new TinyMessage<ICommand>(new WhoisEmail
                             {
                                 EmailAddress = newSubscriber,
-                                RequestedByUser = null,
+                                RequestedByUser = "@slackbot",
                                 RespondToChannel = webhook.SlackChannel
                             }));
                         }
