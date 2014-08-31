@@ -104,19 +104,20 @@
     <Compile Include="Commands\Whois.cs" />
     <Compile Include="FullContact\FullContactPersonResultExtensions.cs" />
     <Compile Include="ISubscriber.cs" />
+    <Compile Include="Mailgun\WebhooksModule.cs" />
     <Compile Include="SlashCommands\InvalidSlashCommandException.cs" />
     <Compile Include="SlashCommands\Parsers\SlashCommandParserBase.cs" />
     <Compile Include="SlashCommands\Parsers\Whois.cs" />
     <Compile Include="SlashCommands\SlashCommand.cs" />
     <Compile Include="CommandHandlers\Whois.cs" />
-    <Compile Include="DummyMailgunWebhooks.cs" />
+    <Compile Include="Mailgun\DummyMailgunWebhooks.cs" />
     <Compile Include="FullContact\FullContactPersonResult.cs" />
     <Compile Include="HttpStatusCodeExtensions.cs" />
     <Compile Include="HttpStatusCodeResponse.cs" />
-    <Compile Include="IMailgunWebhooks.cs" />
-    <Compile Include="InMemoryPendingCommands.cs" />
+    <Compile Include="Mailgun\IMailgunWebhooks.cs" />
+    <Compile Include="Commands\InMemoryPendingCommands.cs" />
     <Compile Include="ISlackApi.cs" />
-    <Compile Include="MailgunWebhook.cs" />
+    <Compile Include="Mailgun\MailgunWebhook.cs" />
     <Compile Include="MessageToSlack.cs" />
     <Compile Include="SlashCommands\SlashCommandParsers.cs" />
     <Compile Include="SubscriberBase.cs" />
@@ -129,7 +130,7 @@
     <Compile Include="IAppSettings.cs" />
     <Compile Include="SlashCommands\ISlashCommandParser.cs" />
     <Compile Include="FullContact\IFullContactApi.cs" />
-    <Compile Include="IPendingCommands.cs" />
+    <Compile Include="Commands\IPendingCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackUserIdentity.cs" />
     <Compile Include="StringExtensions.cs" />
@@ -146,7 +147,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mailgun\Parsers\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

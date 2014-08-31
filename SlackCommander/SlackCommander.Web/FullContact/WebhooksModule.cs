@@ -9,9 +9,8 @@ namespace SlackCommander.Web.FullContact
     public class WebhooksModule : NancyModule
     {
         public WebhooksModule(
-            IAppSettings appSettings, 
             IPendingCommands pendingCommands, 
-            ITinyMessengerHub hub/*, IMailgunWebhooks mailgunWebhooks */)
+            ITinyMessengerHub hub)
         {
             Post["/webhooks/fullcontact/person"] = _ =>
             {
@@ -62,31 +61,6 @@ namespace SlackCommander.Web.FullContact
                 hub.PublishAsync(new TinyMessage<SendMessageToSlack>(slackMessage));
                 return HttpStatusCode.OK;
             };
-
-            //Post["/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
-            //{
-            //    var webhookId = _.webhookId as string;
-            //    if (webhookId.Missing())
-            //    {
-            //        return HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing.");
-            //    }
-            //    var webhook = mailgunWebhooks.Get(webhookId);
-            //    if (webhook == null)
-            //    {
-            //        return HttpStatusCode.NotAcceptable.WithReason("The webhook does not exist.");
-            //    }
-
-            //    // Prepare message
-            //    var slackMessage = new MessageToSlack
-            //    {
-                    
-            //    }
-
-            //    // Post message to Slack
-            //    var slackApi = RestService.For<ISlackApi>(appSettings.Get("slack:responseBaseUrl"));
-            //    await slackApi.SendMessage(slackMessage, appSettings.Get("slack:responseToken"));
-            //    return HttpStatusCode.OK;
-            //};
         }
     }
 }

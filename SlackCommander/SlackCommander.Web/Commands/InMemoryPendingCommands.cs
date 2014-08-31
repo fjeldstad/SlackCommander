@@ -2,7 +2,7 @@
 using System.Runtime.Caching;
 using SlackCommander.Web.Commands;
 
-namespace SlackCommander.Web
+namespace SlackCommander.Web.Commands
 {
     public class InMemoryPendingCommands : IPendingCommands
     {

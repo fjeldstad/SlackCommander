@@ -1,6 +1,6 @@
 ﻿using SlackCommander.Web.Commands;
 
-namespace SlackCommander.Web
+namespace SlackCommander.Web.Commands
 {
     public interface IPendingCommands
     {
