@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using NLog;
 using Refit;
 using SlackCommander.Web.Commands;
@@ -25,18 +26,18 @@ namespace SlackCommander.Web.CommandHandlers
             _pendingCommands = pendingCommands;
         }
 
-        protected string InitiateLookup(WhoisEmail command)
+        protected async Task<string> InitiateLookup(WhoisEmail command)
         {
             Log.Debug("Initiating whois lookup for e-mail address '{0}'", command.EmailAddress);
             var commandId = Guid.NewGuid().ToString();
             var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try
             {
-                fullContactApi.LookupByEmail(
+                await fullContactApi.LookupByEmail(
                         command.EmailAddress,
                         _fullContactWebhookUrl,
                         commandId,
-                        _fullContactApiKey).Wait();
+                        _fullContactApiKey);
                 _pendingCommands.Add(commandId, command);
                 Log.Debug("Lookup for e-mail address '{0}' is pending.", command.EmailAddress);
                 return string.Format("Looking up *{0}*, give me a few moments...", command.EmailAddress);
@@ -47,18 +48,18 @@ namespace SlackCommander.Web.CommandHandlers
             }
         }
 
-        protected string InitiateLookup(WhoisTwitter command)
+        protected async Task<string> InitiateLookup(WhoisTwitter command)
         {
             Log.Debug("Initiating whois lookup for Twitter handle '{0}'", command.TwitterHandle);
             var commandId = Guid.NewGuid().ToString();
             var fullContactApi = RestService.For<IFullContactApi>(_fullContactApiBaseUrl);
             try
             {
-                fullContactApi.LookupByTwitterHandle(
+                await fullContactApi.LookupByTwitterHandle(
                         command.TwitterHandle,
                         _fullContactWebhookUrl,
                         commandId,
-                        _fullContactApiKey).Wait();
+                        _fullContactApiKey);
                 _pendingCommands.Add(commandId, command);
                 Log.Debug("Lookup for Twitter handle '{0}' is pending.", command.TwitterHandle);
                 return string.Format("Looking up *{0}*, give me a few moments...", command.TwitterHandle);
@@ -72,11 +73,11 @@ namespace SlackCommander.Web.CommandHandlers
         protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
         {
             yield return hub.Subscribe<TinyMessageWithResponseText<ICommand>>(
-                deliveryAction: message => message.SetResponseText(InitiateLookup((dynamic)message.Content)),
+                deliveryAction: async message => message.SetResponseText(await InitiateLookup((dynamic)message.Content)),
                 messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);
 
             yield return hub.Subscribe<TinyMessage<ICommand>>(
-                deliveryAction: message => InitiateLookup((dynamic)message.Content),
+                deliveryAction: async message => await InitiateLookup((dynamic)message.Content),
                 messageFilter: message => message.Content is WhoisEmail || message.Content is WhoisTwitter);
         }
     }

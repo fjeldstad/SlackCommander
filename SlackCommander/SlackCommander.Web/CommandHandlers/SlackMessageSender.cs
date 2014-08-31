@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using NLog;
 using Refit;
@@ -19,11 +20,11 @@ namespace SlackCommander.Web.CommandHandlers
             _appSettings = appSettings;
         }
 
-        protected void Send(SendMessageToSlack message)
+        protected async Task Send(SendMessageToSlack message)
         {
             Log.Debug("Sending message to Slack ({0}: {1})", message.Channel, message.Text);
             var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slack:responseBaseUrl"));
-            slackApi.SendMessage(
+            await slackApi.SendMessage(
                 new MessageToSlack
                 {
                     username = "SlackCommander",
@@ -36,7 +37,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
         {
-            yield return hub.Subscribe<TinyMessage<SendMessageToSlack>>(message => Send(message.Content));
+            yield return hub.Subscribe<TinyMessage<SendMessageToSlack>>(async message => await Send(message.Content));
         }
     }
 }
