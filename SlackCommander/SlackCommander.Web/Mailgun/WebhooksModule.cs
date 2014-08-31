@@ -54,7 +54,7 @@ namespace SlackCommander.Web.Mailgun
                             await hub.PublishAsyncUsingTask(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
                             {
                                 Channel = webhook.SlackChannel,
-                                Text = string.Format("*{0}* just signed up for the Unsampler beta! :tada:")
+                                Text = string.Format("*{0}* just signed up for the Unsampler beta! :tada:", newSubscriber)
                             }));
 
                             Log.Debug("Publishing Whois command for '{0}'.", newSubscriber);
