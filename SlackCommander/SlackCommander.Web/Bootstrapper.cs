@@ -67,14 +67,4 @@ namespace SlackCommander.Web
             }));
         }
     }
-
-    public class TempModule : NancyModule
-    {
-        public TempModule()
-        {
-            Get["/temp"] = _ => {
-                                     throw new Exception("Temp!");
-            };
-        }
-    }
 }
