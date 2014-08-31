@@ -14,8 +14,7 @@ namespace SlackCommander.Web.Mailgun
         {
             Post["/webhooks/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
             {
-                var webhookId = _.webhookId as string;
-                return webhookId;
+                var webhookId = (string)_.webhookId;
                 if (webhookId.Missing())
                 {
                     return HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing.");
@@ -27,7 +26,7 @@ namespace SlackCommander.Web.Mailgun
                 }
 
 
-                return Request.Form;
+                return (string)Request.Form["stripped-text"];
             };
         }
     }
