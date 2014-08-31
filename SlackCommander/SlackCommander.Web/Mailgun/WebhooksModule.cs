@@ -15,6 +15,7 @@ namespace SlackCommander.Web.Mailgun
             Post["/webhooks/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
             {
                 var webhookId = _.webhookId as string;
+                return webhookId;
                 if (webhookId.Missing())
                 {
                     return HttpStatusCode.NotAcceptable.WithReason("WebhookId is missing.");
