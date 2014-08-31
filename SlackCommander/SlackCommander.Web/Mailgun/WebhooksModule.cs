@@ -25,8 +25,11 @@ namespace SlackCommander.Web.Mailgun
                     return HttpStatusCode.NotAcceptable.WithReason("The webhook does not exist.");
                 }
 
-
-                return (string)Request.Form["stripped-text"];
+                // TODO Refactor this - should parse e-mail + invoke handlers in separate component(s)
+                var subject = (string)Request.Form["subject"];
+                var strippedText = (string)Request.Form["stripped-text"];
+                return subject;
+                return HttpStatusCode.OK;
             };
         }
     }
