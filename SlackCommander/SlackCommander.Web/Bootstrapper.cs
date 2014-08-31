@@ -7,7 +7,6 @@ using Nancy.Helpers;
 using Nancy.TinyIoc;
 using SlackCommander.Web.SlashCommands;
 using TinyMessenger;
-using Exceptionless;
 
 namespace SlackCommander.Web
 {
@@ -24,9 +23,6 @@ namespace SlackCommander.Web
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
-
-            // Log exceptions to Exceptionless
-            ExceptionlessClient.Current.RegisterNancy(pipelines);
 
             // Register subscriptions
             var hub = container.Resolve<ITinyMessengerHub>();

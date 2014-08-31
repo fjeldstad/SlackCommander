@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using Exceptionless.Extensions;
 using Nancy;
+using NLog;
 using Refit;
 using SlackCommander.Web.Commands;
 using TinyMessenger;
@@ -13,10 +13,13 @@ namespace SlackCommander.Web.Mailgun
 {
     public class WebhooksModule : NancyModule
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         public WebhooksModule(ITinyMessengerHub hub, IMailgunWebhooks mailgunWebhooks)
         {
             Post["/webhooks/mailgun/{webhookId}"] = _ =>
             {
+                Log.Debug("Received webhook call from Mailgun.");
                 var webhookId = (string)_.webhookId;
                 if (webhookId.Missing())
                 {
