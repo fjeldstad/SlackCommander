@@ -15,7 +15,7 @@ namespace SlackCommander.Web.FullContact
             IPendingCommands pendingCommands, 
             ITinyMessengerHub hub)
         {
-            Post["/webhooks/fullcontact/person"] = _ =>
+            Post["/webhooks/fullcontact/person", runAsync: true] = async (_, ct) =>
             {
                 // Parse the request data
                 var person = this.BindTo(new FullContactPersonResult());
@@ -66,7 +66,7 @@ namespace SlackCommander.Web.FullContact
                 }
 
                 // Post message
-                hub.PublishAsync(new TinyMessage<SendMessageToSlack>(slackMessage));
+                await hub.PublishAsyncUsingTask(new TinyMessage<SendMessageToSlack>(slackMessage));
                 return HttpStatusCode.OK;
             };
         }

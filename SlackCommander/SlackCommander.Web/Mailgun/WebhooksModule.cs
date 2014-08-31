@@ -17,7 +17,7 @@ namespace SlackCommander.Web.Mailgun
 
         public WebhooksModule(ITinyMessengerHub hub, IMailgunWebhooks mailgunWebhooks)
         {
-            Post["/webhooks/mailgun/{webhookId}"] = _ =>
+            Post["/webhooks/mailgun/{webhookId}", runAsync: true] = async (_, ct) =>
             {
                 Log.Debug("Received webhook call from Mailgun.");
 
@@ -50,15 +50,15 @@ namespace SlackCommander.Web.Mailgun
                         var newSubscriber = subscriberLine.Replace(subscriberLinePattern, string.Empty).Trim();
                         if (newSubscriber.IsValidEmail())
                         {
-                            Log.Debug("Notifying {0} of the new subscriber.", newSubscriber);
-                            hub.Publish(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
+                            Log.Debug("Notifying {0} of the new subscriber '{0}'.", webhook.SlackChannel, newSubscriber);
+                            await hub.PublishAsyncUsingTask(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
                             {
                                 Channel = webhook.SlackChannel,
                                 Text = string.Format("*{0}* just signed up for the Unsampler beta! :tada:")
                             }));
 
                             Log.Debug("Publishing Whois command for '{0}'.", newSubscriber);
-                            hub.Publish(new TinyMessage<ICommand>(new WhoisEmail
+                            await hub.PublishAsyncUsingTask(new TinyMessage<ICommand>(new WhoisEmail
                             {
                                 EmailAddress = newSubscriber,
                                 RequestedByUser = "@slackbot",
