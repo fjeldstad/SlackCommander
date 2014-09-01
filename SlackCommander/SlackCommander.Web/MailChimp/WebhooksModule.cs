@@ -13,7 +13,7 @@ namespace SlackCommander.Web.MailChimp
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public WebhooksModule(ITinyMessengerHub hub, IMailChimpWebhooks webhooks)
+        public WebhooksModule(ITinyMessengerHub hub, IMailChimpWebhooks webhooks, IAppSettings appSettings)
         {
             // This route is used by MailChimp's webhook validator.
             Get["/webhooks/mailchimp/{webhookId}"] = _ =>
@@ -66,7 +66,7 @@ namespace SlackCommander.Web.MailChimp
                 hub.PublishAsync(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
                 {
                     Channel = webhook.SlackChannel,
-                    Text = string.Format("*{0}* just signed up for the Unsampler beta! :tada:", email)
+                    Text = string.Format(appSettings.Get("mailChimp:subscriberNotificationFormat"), email)
                 }));
 
                 // Request whois lookup for the new subscriber.
