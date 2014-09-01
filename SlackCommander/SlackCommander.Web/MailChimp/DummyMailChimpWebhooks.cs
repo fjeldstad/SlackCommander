@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SlackCommander.Web.Mailgun
+namespace SlackCommander.Web.MailChimp
 {
-    public class DummyMailgunWebhooks : IMailgunWebhooks
+    public class DummyMailChimpWebhooks : IMailChimpWebhooks
     {
         private readonly IAppSettings _appSettings;
 
-        public DummyMailgunWebhooks(IAppSettings appSettings)
+        public DummyMailChimpWebhooks(IAppSettings appSettings)
         {
             if (appSettings == null)
             {
@@ -18,15 +18,15 @@ namespace SlackCommander.Web.Mailgun
             _appSettings = appSettings;
         }
 
-        public MailgunWebhook Get(string id)
+        public MailChimpWebhook Get(string id)
         {
             if (!id.Missing() &&
-                id.Equals(_appSettings.Get("mailgun:webhookId"), StringComparison.Ordinal))
+                id.Equals(_appSettings.Get("mailChimp:webhookId"), StringComparison.Ordinal))
             {
-                return new MailgunWebhook
+                return new MailChimpWebhook
                 {
                     Id = id,
-                    SlackChannel = "#business" // TODO Don't hardcode this
+                    SlackChannel = "@hihaj" // TODO Don't hardcode this
                 };
             }
             return null;

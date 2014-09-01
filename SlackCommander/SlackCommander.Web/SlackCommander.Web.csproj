@@ -98,6 +98,10 @@
     <Compile Include="Commands\Whois.cs" />
     <Compile Include="FullContact\FullContactPersonResultExtensions.cs" />
     <Compile Include="ISubscriber.cs" />
+    <Compile Include="MailChimp\DummyMailChimpWebhooks.cs" />
+    <Compile Include="MailChimp\IMailChimpWebhooks.cs" />
+    <Compile Include="MailChimp\MailChimpWebhook.cs" />
+    <Compile Include="MailChimp\WebhooksModule.cs" />
     <Compile Include="Mailgun\WebhooksModule.cs" />
     <Compile Include="SlashCommands\InvalidSlashCommandException.cs" />
     <Compile Include="SlashCommands\Parsers\SlashCommandParserBase.cs" />

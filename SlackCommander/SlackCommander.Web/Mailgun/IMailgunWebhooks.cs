@@ -9,6 +9,5 @@ namespace SlackCommander.Web.Mailgun
     public interface IMailgunWebhooks
     {
         MailgunWebhook Get(string id);
-        void Add(MailgunWebhook webhook);
     }
 }
