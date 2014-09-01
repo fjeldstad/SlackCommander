@@ -18,7 +18,7 @@ address or Twitter handle is to the current channel. Requires a
 
 SlackCommander responds to the current channel with something similar to this:
 
-!(SlackCommander /whois example response)[https://www.dropbox.com/s/di64sogo3vz8e91/Screenshot%202014-09-01%2021.18.00.png?dl=0]
+![SlackCommander /whois example response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/whois-result.png)
 
 
 ## Misc. integrations
