@@ -2,6 +2,9 @@
 
 Useful (?) slash commands and miscellaneous integrations for Slack.
 
+Built with [Nancy](http://nancyfx.org/) and can easily be hosted as a free
+[Azure Website](http://azure.microsoft.com/en-us/documentation/services/websites/).
+
 
 ## Slash commands 
 
