@@ -26,7 +26,7 @@ namespace SlackCommander.Web.MailChimp
                 return new MailChimpWebhook
                 {
                     Id = id,
-                    SlackChannel = "#business" // TODO Don't hardcode this
+                    SlackChannel = _appSettings.Get("mailChimp:webhookPostsToSlackChannel")
                 };
             }
             return null;
