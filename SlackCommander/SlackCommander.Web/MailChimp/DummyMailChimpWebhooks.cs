@@ -26,7 +26,7 @@ namespace SlackCommander.Web.MailChimp
                 return new MailChimpWebhook
                 {
                     Id = id,
-                    SlackChannel = "@hihaj" // TODO Don't hardcode this
+                    SlackChannel = "#business" // TODO Don't hardcode this
                 };
             }
             return null;

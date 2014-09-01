@@ -68,6 +68,8 @@ namespace SlackCommander.Web.MailChimp
                     Channel = webhook.SlackChannel,
                     Text = string.Format("*{0}* just signed up for the Unsampler beta! :tada:", email)
                 }));
+
+                // Request whois lookup for the new subscriber.
                 hub.PublishAsync(new TinyMessage<ICommand>(new WhoisEmail
                 {
                     EmailAddress = email,

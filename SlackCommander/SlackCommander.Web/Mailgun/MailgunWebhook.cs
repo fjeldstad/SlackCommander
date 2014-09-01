@@ -5,9 +5,9 @@ using System.Web;
 
 namespace SlackCommander.Web.Mailgun
 {
-    public class MailgunWebhook
-    {
-        public string Id { get; set; }
-        public string SlackChannel { get; set; }
-    }
+    //public class MailgunWebhook
+    //{
+    //    public string Id { get; set; }
+    //    public string SlackChannel { get; set; }
+    //}
 }

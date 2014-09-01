@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SlackCommander.Web.Mailgun
 {
-    public interface IMailgunWebhooks
-    {
-        MailgunWebhook Get(string id);
-    }
+    //public interface IMailgunWebhooks
+    //{
+    //    MailgunWebhook Get(string id);
+    //}
 }
