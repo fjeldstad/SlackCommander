@@ -7,5 +7,6 @@ namespace SlackCommander.Web.Commands
     {
         public string Channel { get; set; }
         public string Text { get; set; }
+        public bool UnfurlLinks { get; set; }
     }
 }

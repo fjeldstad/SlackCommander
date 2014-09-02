@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SlackCommander.Web.Mailgun
 {
-    public interface IMailgunWebhooks
+    public interface IMailStorage
     {
-        MailgunWebhook Get(string id);
+        string GetHtmlContents(string id);
+        void Add(string id, string htmlContents);
     }
 }

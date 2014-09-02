@@ -10,6 +10,7 @@ using Nancy.Helpers;
 using Nancy.TinyIoc;
 using NLog;
 using SlackCommander.Web.Commands;
+using SlackCommander.Web.Mailgun;
 using SlackCommander.Web.SlashCommands;
 using TinyMessenger;
 
@@ -27,6 +28,7 @@ namespace SlackCommander.Web
             container.Register<ISlashCommandParser, SlashCommands.Parsers.Whois>(SlashCommands.Parsers.Whois.Command);
 
             container.Register<IPendingCommands>(new InMemoryPendingCommands());
+            container.Register<IMailStorage>(new InMemoryMailStorage());
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

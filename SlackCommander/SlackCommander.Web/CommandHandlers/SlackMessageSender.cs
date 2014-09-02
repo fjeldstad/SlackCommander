@@ -30,7 +30,8 @@ namespace SlackCommander.Web.CommandHandlers
                     username = "SlackCommander",
                     icon_emoji = ":octopus:",
                     channel = message.Channel,
-                    text = message.Text
+                    text = message.Text,
+                    unfurl_links = message.UnfurlLinks
                 },
                 _appSettings.Get("slack:responseToken"));
         }

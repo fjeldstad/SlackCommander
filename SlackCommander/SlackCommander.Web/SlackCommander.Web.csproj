@@ -102,6 +102,8 @@
     <Compile Include="MailChimp\IMailChimpWebhooks.cs" />
     <Compile Include="MailChimp\MailChimpWebhook.cs" />
     <Compile Include="MailChimp\WebhooksModule.cs" />
+    <Compile Include="Mailgun\IMailStorage.cs" />
+    <Compile Include="Mailgun\InMemoryMailStorage.cs" />
     <Compile Include="Mailgun\WebhooksModule.cs" />
     <Compile Include="SlashCommands\InvalidSlashCommandException.cs" />
     <Compile Include="SlashCommands\Parsers\SlashCommandParserBase.cs" />
