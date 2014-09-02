@@ -81,7 +81,7 @@ namespace SlackCommander.Web.Mailgun
                 {
                     return HttpStatusCode.NotFound;
                 }
-                return new Nancy.Responses.TextResponse(htmlContents, "text/html", Encoding.UTF8);
+                return new Nancy.Responses.TextResponse(htmlContents, "text/html; charset=UTF-8", Encoding.UTF8);
             };
         }
     }
