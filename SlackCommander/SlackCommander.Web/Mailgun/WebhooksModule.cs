@@ -52,13 +52,13 @@ namespace SlackCommander.Web.Mailgun
                 var mailId = Guid.NewGuid().ToString();
                 mailStorage.Add(mailId, htmlBody);
 
-                var mailUrl = appSettings.Get("slackCommander:mailStorageUrlBase").TrimEnd('/') + 
+                var mailUrl = appSettings.Get("slackCommander:baseUrl").TrimEnd('/') + 
                     "/temp/email/" + mailId;
 
                 Log.Debug("E-mail from {0} to {1} temporarily stored at {2}", sender, slackChannel, mailUrl);
 
                 // Send notification to Slack.
-                hub.PublishAsync(new TinyMessage<ICommand>(new SendMessageToSlack
+                hub.PublishAsync(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
                 {
                     Channel = (string)_.slackChannel,
                     UnfurlLinks = true,
