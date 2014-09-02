@@ -60,7 +60,7 @@ namespace SlackCommander.Web.Mailgun
                 // Send notification to Slack.
                 hub.PublishAsync(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
                 {
-                    Channel = (string)_.slackChannel,
+                    Channel = slackChannel,
                     UnfurlLinks = true,
                     Text = string.Format("E-mail from *{0}*:\n", sender) +
                            string.Format("<{0}|{1}>", "url", subject)
