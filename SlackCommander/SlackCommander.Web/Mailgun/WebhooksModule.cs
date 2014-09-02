@@ -63,7 +63,7 @@ namespace SlackCommander.Web.Mailgun
                     Channel = slackChannel,
                     UnfurlLinks = true,
                     Text = string.Format("E-mail from *{0}*:\n", sender) +
-                           string.Format("<{0}|{1}>", "url", subject)
+                           string.Format("<{0}|{1}>", mailUrl, subject)
                 }));
 
                 return HttpStatusCode.OK;
