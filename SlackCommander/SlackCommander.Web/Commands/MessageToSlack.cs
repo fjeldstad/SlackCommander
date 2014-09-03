@@ -21,10 +21,12 @@
             public string pretext { get; set; }
             public string text { get; set; }
             public string color { get; set; }
+            public string[] markdwn_in { get; set; }
             public Field[] fields { get; set; }
 
             public Attachment()
             {
+                markdwn_in = new string[0];
                 fields = new Field[0];
             }
 
