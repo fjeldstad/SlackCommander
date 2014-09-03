@@ -59,7 +59,8 @@ namespace SlackCommander.Web.Mailgun
                         new MessageToSlack.Attachment
                         {
                             fallback = subject,
-                            text = string.Format("*{0}*\n\n{1}", subject, plainBody)
+                            pretext = string.Format("*{0}*", subject),
+                            text = string.Format("\n{0}", plainBody)
                         }
                     }
                 }));
