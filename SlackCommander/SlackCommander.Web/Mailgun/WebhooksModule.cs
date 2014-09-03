@@ -61,7 +61,7 @@ namespace SlackCommander.Web.Mailgun
                             fallback = string.Format("*{0}*", subject),
                             pretext = string.Format("*{0}*", subject),
                             text = string.Format("{0}", plainBody),
-                            markdwn_in = new [] { "fallback", "pretext" }
+                            mrkdwn_in = new [] { "fallback", "pretext" }
                         }
                     }
                 }));
