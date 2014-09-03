@@ -92,7 +92,6 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CommandHandlers\SlackMessageSender.cs" />
     <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\SendMessageToSlack.cs" />
     <Compile Include="Commands\WhoisTwitter.cs" />
     <Compile Include="Commands\WhoisEmail.cs" />
     <Compile Include="Commands\Whois.cs" />
@@ -102,8 +101,6 @@
     <Compile Include="MailChimp\IMailChimpWebhooks.cs" />
     <Compile Include="MailChimp\MailChimpWebhook.cs" />
     <Compile Include="MailChimp\WebhooksModule.cs" />
-    <Compile Include="Mailgun\IMailStorage.cs" />
-    <Compile Include="Mailgun\InMemoryMailStorage.cs" />
     <Compile Include="Mailgun\WebhooksModule.cs" />
     <Compile Include="SlashCommands\InvalidSlashCommandException.cs" />
     <Compile Include="SlashCommands\Parsers\SlashCommandParserBase.cs" />
@@ -118,7 +115,7 @@
     <Compile Include="Commands\InMemoryPendingCommands.cs" />
     <Compile Include="ISlackApi.cs" />
     <Compile Include="Mailgun\MailgunWebhook.cs" />
-    <Compile Include="MessageToSlack.cs" />
+    <Compile Include="Commands\MessageToSlack.cs" />
     <Compile Include="SlashCommands\SlashCommandParsers.cs" />
     <Compile Include="SubscriberBase.cs" />
     <Compile Include="TinyMessage.cs" />

@@ -28,7 +28,6 @@ namespace SlackCommander.Web
             container.Register<ISlashCommandParser, SlashCommands.Parsers.Whois>(SlashCommands.Parsers.Whois.Command);
 
             container.Register<IPendingCommands>(new InMemoryPendingCommands());
-            container.Register<IMailStorage>(new InMemoryMailStorage());
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

@@ -18,9 +18,7 @@ namespace SlackCommander.Web.Mailgun
 
         public WebhooksModule(
             ITinyMessengerHub hub, 
-            IMailgunWebhooks mailgunWebhooks, 
-            IMailStorage mailStorage, 
-            IAppSettings appSettings)
+            IMailgunWebhooks mailgunWebhooks)
         {
             Post["/webhooks/mailgun/{webhookId}/{slackChannel}"] = _ =>
             {
@@ -44,44 +42,27 @@ namespace SlackCommander.Web.Mailgun
                 var slackChannel = "#" + ((string)_.slackChannel).TrimStart('#');
 
                 var sender = (string)Request.Form["sender"];
+                var recipient = (string)Request.Form["recipient"];
                 var subject = (string)Request.Form["subject"];
-                var htmlBody = (string)Request.Form["body-html"];
-
-                // Store HTML contents temporarily so that Slack can import it as an attachment
-                // via "link unfurling" when the message is received.
-                var mailId = Guid.NewGuid().ToString();
-                mailStorage.Add(mailId, htmlBody);
-
-                var mailUrl = appSettings.Get("slackCommander:baseUrl").TrimEnd('/') + 
-                    "/temp/email/" + mailId;
-
-                Log.Debug("E-mail from {0} to {1} temporarily stored at {2}", sender, slackChannel, mailUrl);
+                var plainBody = (string)Request.Form["body-plain"];
 
                 // Send notification to Slack.
-                hub.PublishAsync(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
+                hub.PublishAsync(new TinyMessage<MessageToSlack>(new MessageToSlack
                 {
-                    Channel = slackChannel,
-                    UnfurlLinks = true,
-                    Text = string.Format("E-mail from *{0}*:\n", sender) +
-                           string.Format("<{0}|Message>", mailUrl)
+                    channel = slackChannel,
+                    text = string.Format("E-mail from *{0}* to *{1}*:", sender, recipient),
+                    attachments = new[]
+                    {
+                        new MessageToSlack.Attachment
+                        {
+                            fallback = subject,
+                            pretext = subject,
+                            text = plainBody
+                        }
+                    }
                 }));
 
                 return HttpStatusCode.OK;
-            };
-
-            Get["/temp/email/{mailId}"] = _ =>
-            {
-                var mailId = (string)_.mailId;
-                if (mailId.Missing())
-                {
-                    return HttpStatusCode.NotFound;
-                }
-                var htmlContents = mailStorage.GetHtmlContents(mailId);
-                if (htmlContents.Missing())
-                {
-                    return HttpStatusCode.NotFound;
-                }
-                return new Nancy.Responses.TextResponse(htmlContents, "text/html; charset=UTF-8", Encoding.UTF8);
             };
         }
     }

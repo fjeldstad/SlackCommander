@@ -63,10 +63,10 @@ namespace SlackCommander.Web.MailChimp
                 }
 
                 // Send message to Slack notifying about the new subscriber.
-                hub.PublishAsync(new TinyMessage<SendMessageToSlack>(new SendMessageToSlack
+                hub.PublishAsync(new TinyMessage<MessageToSlack>(new MessageToSlack
                 {
-                    Channel = webhook.SlackChannel,
-                    Text = string.Format(appSettings.Get("mailChimp:subscriberNotificationFormat"), email)
+                    channel = webhook.SlackChannel,
+                    text = string.Format(appSettings.Get("mailChimp:subscriberNotificationFormat"), email)
                 }));
 
                 // Request whois lookup for the new subscriber.

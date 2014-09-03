@@ -43,14 +43,14 @@ namespace SlackCommander.Web.FullContact
                 Log.Debug("Processing pending command '{0}' as part of responding to a webhook call from FullContact.", person.WebhookId);
 
                 // Prepare message text
-                var slackMessage = new SendMessageToSlack
+                var slackMessage = new MessageToSlack
                 {
-                    Channel = command.RespondToChannel
+                    channel = command.RespondToChannel
                 };
                 if (person.Result.Status != 200 ||
                     person.Result.Likelihood < 0.7)
                 {
-                    slackMessage.Text = string.Format(
+                    slackMessage.text = string.Format(
                         "Unfortunately I'm unable to find any reliable information on who *{0}* is. " +
                         "I suggest you try <https://www.google.com/search?q={1}|Google>.",
                         command.Subject(),
@@ -58,15 +58,15 @@ namespace SlackCommander.Web.FullContact
                 }
                 else
                 {
-                    slackMessage.Text = string.Format(
+                    slackMessage.text = string.Format(
                         "I looked up *{0}* and I'm {1:P0} sure this is the person behind it:\n\n",
                         command.Subject(),
                         person.Result.Likelihood);
-                    slackMessage.Text += person.FormattedSummary();
+                    slackMessage.text += person.FormattedSummary();
                 }
 
                 // Post message
-                await hub.PublishAsyncUsingTask(new TinyMessage<SendMessageToSlack>(slackMessage));
+                await hub.PublishAsyncUsingTask(new TinyMessage<MessageToSlack>(slackMessage));
                 return HttpStatusCode.OK;
             };
         }
