@@ -46,18 +46,20 @@ namespace SlackCommander.Web.Mailgun
                 var subject = (string)Request.Form["subject"];
                 var plainBody = (string)Request.Form["body-plain"];
 
+                // HACK: Since Nancy parses subject into "subject,subject", just split in two for now
+                subject = subject.Substring(0, subject.Length/2);
+
                 // Send notification to Slack.
                 hub.PublishAsync(new TinyMessage<MessageToSlack>(new MessageToSlack
                 {
                     channel = slackChannel,
-                    text = string.Format("E-mail from *{0}* to *{1}*:", sender, recipient),
+                    text = string.Format("E-mail from *{0}*:\n", sender, recipient),
                     attachments = new[]
                     {
                         new MessageToSlack.Attachment
                         {
                             fallback = subject,
-                            pretext = subject,
-                            text = plainBody
+                            text = string.Format("*{0}*\n{1}", subject, plainBody)
                         }
                     }
                 }));
