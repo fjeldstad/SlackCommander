@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MassTransit;
 using NLog;
 using Refit;
-using SlackCommander.Web.Commands;
-using TinyMessenger;
+using SlackCommander.Web.Messages;
 
 namespace SlackCommander.Web.CommandHandlers
 {
-    public class SlackMessageSender : SubscriberBase
+    public class SlackMessageSender : Consumes<MessageToSlack>.All
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IAppSettings _appSettings;
@@ -20,7 +20,7 @@ namespace SlackCommander.Web.CommandHandlers
             _appSettings = appSettings;
         }
 
-        protected async Task Send(MessageToSlack message)
+        public void Consume(MessageToSlack message)
         {
             Log.Debug("Sending message to Slack ({0}: {1})", message.channel, message.text);
             if (message.username.Missing())
@@ -32,12 +32,7 @@ namespace SlackCommander.Web.CommandHandlers
                 message.icon_emoji = ":octopus:";
             }
             var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slack:responseBaseUrl"));
-            await slackApi.SendMessage(message, _appSettings.Get("slack:responseToken"));
-        }
-
-        protected override IEnumerable<TinyMessageSubscriptionToken> RegisterSubscriptionsCore(ITinyMessengerHub hub)
-        {
-            yield return hub.Subscribe<TinyMessage<MessageToSlack>>(async message => await Send(message.Content));
+            slackApi.SendMessage(message, _appSettings.Get("slack:responseToken"));
         }
     }
 }

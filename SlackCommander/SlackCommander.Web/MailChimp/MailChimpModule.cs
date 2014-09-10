@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MassTransit;
 using Nancy;
 using NLog;
-using SlackCommander.Web.Commands;
-using TinyMessenger;
+using SlackCommander.Web.Messages;
 
 namespace SlackCommander.Web.MailChimp
 {
-    public class WebhooksModule : NancyModule
+    public class MailChimpModule : NancyModule
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public WebhooksModule(ITinyMessengerHub hub, IMailChimpWebhooks webhooks, IAppSettings appSettings)
+        public MailChimpModule(IServiceBus bus, IMailChimpWebhooks webhooks, IAppSettings appSettings)
         {
             // This route is used by MailChimp's webhook validator.
             Get["/webhooks/mailchimp/{webhookId}"] = _ =>
@@ -63,19 +63,20 @@ namespace SlackCommander.Web.MailChimp
                 }
 
                 // Send message to Slack notifying about the new subscriber.
-                hub.PublishAsync(new TinyMessage<MessageToSlack>(new MessageToSlack
+                bus.Publish(new MessageToSlack
                 {
                     channel = webhook.SlackChannel,
                     text = string.Format(appSettings.Get("mailChimp:subscriberNotificationFormat"), email)
-                }));
+                });
 
                 // Request whois lookup for the new subscriber.
-                hub.PublishAsync(new TinyMessage<ICommand>(new WhoisEmail
+                bus.Publish(new WhoisEmailRequest
                 {
+                    CorrelationId = Guid.NewGuid(),
                     EmailAddress = email,
                     RequestedByUser = "@slackbot",
                     RespondToChannel = webhook.SlackChannel
-                }));
+                });
 
                 return HttpStatusCode.OK;
             };

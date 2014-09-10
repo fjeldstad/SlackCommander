@@ -1,5 +1,8 @@
-﻿namespace SlackCommander.Web.FullContact
+﻿using System;
+
+namespace SlackCommander.Web.Messages
 {
+    [Serializable]
     public class FullContactPersonResult
     {
         public string WebhookId { get; set; }
@@ -11,6 +14,7 @@
         }
     }
 
+    [Serializable]
     public class ResultSegment
     {
         public int Status { get; set; }
@@ -30,6 +34,7 @@
             Photos = new Photo[0];
         }
 
+        [Serializable]
         public class ContactInfoSegment
         {
             public string FamilyName { get; set; }
@@ -42,12 +47,14 @@
                 Websites = new Website[0];
             }
 
+            [Serializable]
             public class Website
             {
                 public string Url { get; set; }
             }
         }
 
+        [Serializable]
         public class DemographicsSegment
         {
             public string LocationGeneral { get; set; }
@@ -61,6 +68,7 @@
                 LocationDeduced = new LocationDeducedSegment();
             }
 
+            [Serializable]
             public class LocationDeducedSegment
             {
                 public string NormalizedLocation { get; set; }
@@ -70,6 +78,7 @@
             }
         }
 
+        [Serializable]
         public class SocialProfile
         {
             public string TypeId { get; set; }
@@ -81,6 +90,7 @@
             // ...
         }
 
+        [Serializable]
         public class Organization
         {
             public string Name { get; set; }
@@ -111,6 +121,7 @@
             }
         }
 
+        [Serializable]
         public class Photo
         {
             public string Url { get; set; }

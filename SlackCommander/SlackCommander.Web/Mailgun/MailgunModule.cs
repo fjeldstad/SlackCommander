@@ -4,20 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using MassTransit;
 using Nancy;
 using NLog;
 using Refit;
-using SlackCommander.Web.Commands;
-using TinyMessenger;
+using SlackCommander.Web.Messages;
 
 namespace SlackCommander.Web.Mailgun
 {
-    public class WebhooksModule : NancyModule
+    public class MailgunModule : NancyModule
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public WebhooksModule(
-            ITinyMessengerHub hub, 
+        public MailgunModule(
+            IServiceBus bus, 
             IMailgunWebhooks mailgunWebhooks)
         {
             Post["/webhooks/mailgun/{webhookId}/{slackChannel}"] = _ =>
@@ -50,7 +50,7 @@ namespace SlackCommander.Web.Mailgun
                 subject = subject.Substring(0, subject.Length/2);
 
                 // Send notification to Slack.
-                hub.PublishAsync(new TinyMessage<MessageToSlack>(new MessageToSlack
+                bus.Publish(new MessageToSlack
                 {
                     channel = slackChannel,
                     text = string.Format("E-mail from *{0}*:\n", sender, recipient),
@@ -64,7 +64,7 @@ namespace SlackCommander.Web.Mailgun
                             mrkdwn_in = new [] { "fallback", "pretext" }
                         }
                     }
-                }));
+                });
 
                 return HttpStatusCode.OK;
             };

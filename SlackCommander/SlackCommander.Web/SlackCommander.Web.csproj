@@ -44,6 +44,15 @@
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Magnum">
+      <HintPath>..\packages\Magnum.2.1.2\lib\NET40\Magnum.dll</HintPath>
+    </Reference>
+    <Reference Include="MassTransit">
+      <HintPath>..\packages\MassTransit.2.9.5\lib\net40\MassTransit.dll</HintPath>
+    </Reference>
+    <Reference Include="MassTransit.StructureMapIntegration">
+      <HintPath>..\packages\MassTransit.StructureMap.2.9.5\lib\net40\MassTransit.StructureMapIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Nancy, Version=0.23.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -100,44 +109,33 @@
     <Compile Include="AppSettings.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CommandHandlers\SlackMessageSender.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\WhoisTwitter.cs" />
-    <Compile Include="Commands\WhoisEmail.cs" />
-    <Compile Include="Commands\Whois.cs" />
-    <Compile Include="FullContact\FullContactPersonResultExtensions.cs" />
-    <Compile Include="ISubscriber.cs" />
+    <Compile Include="CommandHandlers\SlashCommandHandler.cs" />
+    <Compile Include="Messages\FullContactEmailLookupRequest.cs" />
+    <Compile Include="Messages\FullContactTwitterLookupRequest.cs" />
+    <Compile Include="Messages\SlashCommandResponse.cs" />
+    <Compile Include="Messages\WhoisTwitterRequest.cs" />
+    <Compile Include="Messages\WhoisEmailRequest.cs" />
     <Compile Include="MailChimp\DummyMailChimpWebhooks.cs" />
     <Compile Include="MailChimp\IMailChimpWebhooks.cs" />
     <Compile Include="MailChimp\MailChimpWebhook.cs" />
-    <Compile Include="MailChimp\WebhooksModule.cs" />
-    <Compile Include="Mailgun\WebhooksModule.cs" />
-    <Compile Include="SlashCommands\InvalidSlashCommandException.cs" />
-    <Compile Include="SlashCommands\Parsers\SlashCommandParserBase.cs" />
-    <Compile Include="SlashCommands\Parsers\Whois.cs" />
-    <Compile Include="SlashCommands\SlashCommand.cs" />
-    <Compile Include="CommandHandlers\Whois.cs" />
+    <Compile Include="MailChimp\MailChimpModule.cs" />
+    <Compile Include="Mailgun\MailgunModule.cs" />
+    <Compile Include="Sagas\WhoisSaga.cs" />
+    <Compile Include="Messages\SlashCommand.cs" />
+    <Compile Include="CommandHandlers\FullContactLookup.cs" />
     <Compile Include="Mailgun\DummyMailgunWebhooks.cs" />
-    <Compile Include="FullContact\FullContactPersonResult.cs" />
+    <Compile Include="Messages\FullContactPersonResult.cs" />
     <Compile Include="HttpStatusCodeExtensions.cs" />
     <Compile Include="HttpStatusCodeResponse.cs" />
     <Compile Include="Mailgun\IMailgunWebhooks.cs" />
-    <Compile Include="Commands\InMemoryPendingCommands.cs" />
     <Compile Include="ISlackApi.cs" />
     <Compile Include="Mailgun\MailgunWebhook.cs" />
-    <Compile Include="Commands\MessageToSlack.cs" />
-    <Compile Include="SlashCommands\SlashCommandParsers.cs" />
+    <Compile Include="Messages\MessageToSlack.cs" />
     <Compile Include="StructureMap\MainRegistry.cs" />
-    <Compile Include="SubscriberBase.cs" />
-    <Compile Include="TinyMessage.cs" />
-    <Compile Include="TinyMessageWithResponseText.cs" />
-    <Compile Include="TinyMessenger.cs" />
-    <Compile Include="TinyMessengerHubExtensions.cs" />
-    <Compile Include="FullContact\WebhooksModule.cs" />
-    <Compile Include="SlashCommands\SlashCommandsModule.cs" />
+    <Compile Include="FullContact\FullContactModule.cs" />
+    <Compile Include="Slack\SlackModule.cs" />
     <Compile Include="IAppSettings.cs" />
-    <Compile Include="SlashCommands\ISlashCommandParser.cs" />
     <Compile Include="FullContact\IFullContactApi.cs" />
-    <Compile Include="Commands\IPendingCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackUserIdentity.cs" />
     <Compile Include="StringExtensions.cs" />

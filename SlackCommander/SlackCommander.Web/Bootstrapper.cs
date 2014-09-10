@@ -1,21 +1,14 @@
-﻿using System;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+﻿using System.Text;
+using MassTransit;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.StructureMap;
 using Nancy.Extensions;
 using Nancy.Helpers;
-using Nancy.TinyIoc;
 using NLog;
-using SlackCommander.Web.Commands;
-using SlackCommander.Web.Mailgun;
-using SlackCommander.Web.SlashCommands;
 using StructureMap;
 using StructureMap.Graph;
-using TinyMessenger;
 
 namespace SlackCommander.Web
 {
@@ -37,12 +30,15 @@ namespace SlackCommander.Web
         {
             base.ApplicationStartup(container, pipelines);
 
-            // Register subscriptions
-            var hub = container.GetInstance<ITinyMessengerHub>();
-            foreach (var subscriber in container.GetAllInstances<ISubscriber>())
+            var bus = ServiceBusFactory.New(config =>
             {
-                subscriber.RegisterSubscriptions(hub);
-            }
+                config.ReceiveFrom("loopback://localhost/queue");
+                config.Subscribe(x =>
+                {
+                    x.LoadFrom(container);
+                });
+            });
+            container.Inject(bus);
 
             // Log unhandled exceptions
             pipelines.OnError += (ctx, ex) =>

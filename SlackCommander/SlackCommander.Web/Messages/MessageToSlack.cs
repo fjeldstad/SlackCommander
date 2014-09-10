@@ -1,6 +1,9 @@
-﻿namespace SlackCommander.Web.Commands
+﻿using System;
+
+namespace SlackCommander.Web.Messages
 {
-    public class MessageToSlack : ICommand
+    [Serializable]
+    public class MessageToSlack
     {
         public string username { get; set; }
         public string icon_url { get; set; }
@@ -15,6 +18,7 @@
             attachments = new Attachment[0];
         }
 
+        [Serializable]
         public class Attachment
         {
             public string fallback { get; set; }
@@ -30,6 +34,7 @@
                 fields = new Field[0];
             }
 
+            [Serializable]
             public class Field
             {
                 public string title { get; set; }

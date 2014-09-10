@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SlackCommander.Web.SlashCommands
+namespace SlackCommander.Web.Messages
 {
     [Serializable]
     public class SlashCommand
