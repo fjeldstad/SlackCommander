@@ -55,10 +55,10 @@ namespace SlackCommander.Web.CommandHandlers
             
             if (message.text.CouldBeTwitterHandle())
             {
-                _bus.Publish(new WhoisEmailRequest
+                _bus.Publish(new WhoisTwitterRequest
                 {
                     CorrelationId = Guid.NewGuid(),
-                    EmailAddress = message.text,
+                    TwitterHandle = message.text,
                     RequestedByUser = message.user_name,
                     RespondToChannel =
                         message.channel_name == "directmessage"
