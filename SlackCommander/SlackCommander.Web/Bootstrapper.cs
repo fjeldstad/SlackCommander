@@ -26,9 +26,9 @@ namespace SlackCommander.Web
 
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<AppSettings>().As<IAppSettings>();
-            builder.RegisterType<DummyMailChimpWebhooks>().As<IMailChimpWebhooks>();
-            builder.RegisterType<DummyMailgunWebhooks>().As<IMailgunWebhooks>();
+            builder.RegisterType<AppSettings>().As<IAppSettings>().SingleInstance();
+            builder.RegisterType<DummyMailChimpWebhooks>().As<IMailChimpWebhooks>().SingleInstance();
+            builder.RegisterType<DummyMailgunWebhooks>().As<IMailgunWebhooks>().SingleInstance();
 
             // Consumers and sagas
             builder.RegisterAssemblyTypes(typeof(Bootstrapper).Assembly)
