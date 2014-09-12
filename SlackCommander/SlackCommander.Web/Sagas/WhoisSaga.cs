@@ -48,6 +48,11 @@ namespace SlackCommander.Web.Sagas
             });
         }
 
+        public WhoisSaga(Guid correlationId)
+        {
+            CorrelationId = correlationId;
+        }
+
         void ProcessWhoisRequest(WhoisEmailRequest message)
         {
             RespondToChannel = message.RespondToChannel;
