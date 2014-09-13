@@ -31,7 +31,6 @@ SlackCommander responds to the current channel with something similar to this:
 - **MailChimp webhook for new subscribers** - automatically posts a notification
   to a preconfigured Slack channel about the new list signup + initiates a whois 
   lookup (which is also posted to the channel when complete).
-
 - **Send e-mail to Slack** - set up a [Mailgun](https://mailgun.com) route to 
   forward incoming e-mail to any Slack channel.
 
