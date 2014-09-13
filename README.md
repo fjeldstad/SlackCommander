@@ -31,3 +31,16 @@ SlackCommander responds to the current channel with something similar to this:
 - **MailChimp webhook for new subscribers** - automatically posts a notification
   to a preconfigured Slack channel about the new list signup + initiates a whois 
   lookup (which is also posted to the channel when complete).
+
+- **Send e-mail to Slack** - set up a [Mailgun](https://mailgun.com) route to 
+  forward incoming e-mail to any Slack channel.
+
+    Mailgun route details
+    =====================
+
+    Filter expression: match_recipient("^(?P<slackChannel>[\w]+)\.(?P<webhookId>[\w]+)@yourdomain.net$")
+
+    Action: forward("https://yourslackcommander.com/webhooks/mailgun/\g<webhookId>/\g<slackChannel>")
+
+    (webhookId should be a hard-to-guess token to prevent spam etc.)
+
