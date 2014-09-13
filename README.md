@@ -5,6 +5,8 @@ Useful (?) slash commands and miscellaneous integrations for [Slack](https://sla
 Built with [Nancy](http://nancyfx.org/) and can easily be hosted as a free
 [Azure Website](http://azure.microsoft.com/en-us/documentation/services/websites/).
 
+[![Build status](https://ci.appveyor.com/api/projects/status/yki2s9y81vw2h7wn/branch/master)](https://ci.appveyor.com/project/Hihaj/slackcommander/branch/master)
+
 
 ## Slash commands 
 
