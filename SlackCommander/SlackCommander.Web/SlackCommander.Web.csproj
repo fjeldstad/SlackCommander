@@ -156,7 +156,6 @@
     <Compile Include="SlackUserIdentity.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Todo\AzureTableStorageTodoService.cs" />
-    <Compile Include="Todo\DummyTodoService.cs" />
     <Compile Include="Todo\ITodoService.cs" />
     <Compile Include="Todo\TodoItem.cs" />
   </ItemGroup>

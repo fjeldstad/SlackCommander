@@ -104,12 +104,8 @@ namespace SlackCommander.Web.CommandHandlers
             {
                 case "":
                 {
-                    _bus.Publish(new MessageToSlack
-                    {
-                        channel = listId,
-                        text = ToSlackString(list)
-                    });
-                    return null;
+                    // Just echo the list
+                    break;
                 }
                 case "add":
                 {
@@ -144,7 +140,7 @@ namespace SlackCommander.Web.CommandHandlers
                 case "clear":
                 {
                     _todoService.ClearItems(listId);
-                    return "All clear!";
+                    break;
                 }
                 default:
                 {
@@ -152,7 +148,12 @@ namespace SlackCommander.Web.CommandHandlers
                 }
             }
             list = _todoService.GetItems(listId).ToArray();
-            return ToSlackString(list);
+            _bus.Publish(new MessageToSlack
+            {
+                channel = listId,
+                text = ToSlackString(list)
+            });
+            return null;
         }
 
         private static string ToSlackString(IEnumerable<TodoItem> todoItems)
