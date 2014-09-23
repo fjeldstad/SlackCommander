@@ -16,8 +16,6 @@ namespace SlackCommander.Web.Slack
 
         public SlackModule(IServiceBus bus)
         {
-            this.RequiresAuthentication();
-
             Post["/slashcommands", runAsync: true] = async (_, ct) =>
             {
                 var slashCommand = this.Bind<SlashCommand>();
