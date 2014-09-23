@@ -163,6 +163,11 @@ namespace SlackCommander.Web.CommandHandlers
 
         private static string ToSlackString(IEnumerable<TodoItem> todoItems)
         {
+            var items = todoItems.ToArray();
+            if (!items.Any())
+            {
+                return "You are all done!";
+            }
             var text = new StringBuilder();
             foreach (var item in todoItems)
             {
