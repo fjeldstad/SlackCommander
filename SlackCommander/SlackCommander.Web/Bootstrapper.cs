@@ -29,7 +29,7 @@ namespace SlackCommander.Web
             builder.RegisterType<AppSettings>().As<IAppSettings>().SingleInstance();
             builder.RegisterType<DummyMailChimpWebhooks>().As<IMailChimpWebhooks>().SingleInstance();
             builder.RegisterType<DummyMailgunWebhooks>().As<IMailgunWebhooks>().SingleInstance();
-            builder.RegisterType<DummyTodoService>().As<ITodoService>().SingleInstance();
+            builder.RegisterType<AzureTableStorageTodoService>().As<ITodoService>().SingleInstance();
 
             // Consumers and sagas
             builder.RegisterAssemblyTypes(typeof(Bootstrapper).Assembly)

@@ -97,28 +97,17 @@ namespace SlackCommander.Web.CommandHandlers
                 return null;
             }
 
-            var list = _todoService.GetItems(message.user_id).ToArray();
+            var listId = message.channel_id;
+            var list = _todoService.GetItems(listId).ToArray();
             var @operator = message.text.SubstringByWords(0, 1);
             switch (@operator)
             {
                 case "":
                 {
-                    // Just respond with the list
-                    break;
-                }
-                case "show":
-                {
                     _bus.Publish(new MessageToSlack
                     {
-                        channel = message.channel_name == "directmessage"
-                            ? "@" + message.user_name
-                            : "#" + message.channel_name,
-                        text = string.Format(
-                        "*{0}{1}* todo:{2}{2}{3}", 
-                        message.user_name, 
-                        message.user_name.EndsWith("s", StringComparison.InvariantCultureIgnoreCase) ? "'" : "'s",
-                        Environment.NewLine,
-                        ToSlackString(list))
+                        channel = listId,
+                        text = ToSlackString(list)
                     });
                     return null;
                 }
@@ -129,7 +118,7 @@ namespace SlackCommander.Web.CommandHandlers
                     {
                         return null;
                     }
-                    _todoService.AddItem(message.user_id, todoText);
+                    _todoService.AddItem(listId, todoText);
                     break;
                 }
                 case "done":
@@ -139,7 +128,7 @@ namespace SlackCommander.Web.CommandHandlers
                     {
                         return null;
                     }
-                    _todoService.MarkItemAsDone(message.user_id, todoItemId);
+                    _todoService.MarkItemAsDone(listId, todoItemId);
                     break;
                 } 
                 case "remove":
@@ -149,12 +138,12 @@ namespace SlackCommander.Web.CommandHandlers
                     {
                         return null;
                     }
-                    _todoService.RemoveItem(message.user_id, todoItemId);
+                    _todoService.RemoveItem(listId, todoItemId);
                     break;
                 }
                 case "clear":
                 {
-                    _todoService.ClearItems(message.user_id);
+                    _todoService.ClearItems(listId);
                     return "All clear!";
                 }
                 default:
@@ -162,7 +151,7 @@ namespace SlackCommander.Web.CommandHandlers
                     return "Sorry, that is not a valid syntax for the `/todo` command.";
                 }
             }
-            list = _todoService.GetItems(message.user_id).ToArray();
+            list = _todoService.GetItems(listId).ToArray();
             return ToSlackString(list);
         }
 
