@@ -101,7 +101,7 @@ namespace SlackCommander.Web.CommandHandlers
             var @operator = message.text.SubstringByWords(0, 1);
             switch (@operator)
             {
-                case null:
+                case "":
                 {
                     // Just respond with the list
                     break;
