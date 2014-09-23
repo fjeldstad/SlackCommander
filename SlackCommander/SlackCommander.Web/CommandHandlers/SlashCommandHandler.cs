@@ -107,6 +107,15 @@ namespace SlackCommander.Web.CommandHandlers
                     // Just echo the list
                     break;
                 }
+                case "show":
+                {
+                    _bus.Publish(new MessageToSlack
+                    {
+                        channel = listId,
+                        text = ToSlackString(list)
+                    });
+                    return null;
+                }
                 case "add":
                 {
                     var todoText = message.text.SubstringByWords(1);
@@ -148,12 +157,7 @@ namespace SlackCommander.Web.CommandHandlers
                 }
             }
             list = _todoService.GetItems(listId).ToArray();
-            _bus.Publish(new MessageToSlack
-            {
-                channel = listId,
-                text = ToSlackString(list)
-            });
-            return null;
+            return ToSlackString(list);
         }
 
         private static string ToSlackString(IEnumerable<TodoItem> todoItems)
