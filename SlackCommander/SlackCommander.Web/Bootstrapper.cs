@@ -5,7 +5,6 @@ using Magnum.Extensions;
 using MassTransit;
 using MassTransit.Saga;
 using Nancy;
-using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Autofac;
 using Nancy.Extensions;
@@ -63,25 +62,6 @@ namespace SlackCommander.Web
                 Log.Error("Unhandled exception.", ex);
                 return null;
             };
-        }
-
-        protected override void RequestStartup(ILifetimeScope container, IPipelines pipelines, NancyContext context)
-        {
-            base.RequestStartup(container, pipelines, context);
-            
-            // Enable token authentication for incoming slash commands
-            StatelessAuthentication.Enable(pipelines, new StatelessAuthenticationConfiguration(ctx =>
-            {
-                var appSettings = container.Resolve<IAppSettings>();
-                var body = HttpUtility.ParseQueryString(ctx.Request.Body.AsString(), Encoding.UTF8);
-                if (body == null ||
-                    string.IsNullOrWhiteSpace(body["token"]) ||
-                    body["token"] != appSettings.Get("slack:slashCommandToken"))
-                {
-                    return null;
-                }
-                return new SlackUserIdentity();
-            }));
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using MassTransit;
+using NLog;
 using SlackCommander.Web.Messages;
 using SlackCommander.Web.Todo;
 
@@ -11,11 +12,15 @@ namespace SlackCommander.Web.CommandHandlers
 {
     public class SlashCommandHandler : Consumes<SlashCommand>.All
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private readonly IAppSettings _appSettings;
         private readonly IServiceBus _bus;
         private readonly ITodoService _todoService;
 
-        public SlashCommandHandler(IServiceBus bus, ITodoService todoService)
+        public SlashCommandHandler(IAppSettings appSettings, IServiceBus bus, ITodoService todoService)
         {
+            _appSettings = appSettings;
             _bus = bus;
             _todoService = todoService;
         }
@@ -45,6 +50,12 @@ namespace SlackCommander.Web.CommandHandlers
 
         private string HandleWhois(SlashCommand message)
         {
+            if (!_appSettings.Get("slack:whoisSlashCommandToken").Equals(message.token))
+            {
+                Log.Info("Blocked an unauthorized /whois slash command.");
+                return null;
+            }
+
             if (message.text.IsValidEmail())
             {
                 _bus.Publish(new WhoisEmailRequest
@@ -80,6 +91,12 @@ namespace SlackCommander.Web.CommandHandlers
 
         private string HandleTodo(SlashCommand message)
         {
+            if (!_appSettings.Get("slack:todoSlashCommandToken").Equals(message.token))
+            {
+                Log.Info("Blocked an unauthorized /todo slash command.");
+                return null;
+            }
+
             var list = _todoService.GetItems(message.user_id).ToArray();
             var @operator = message.text.SubstringByWords(0, 1);
             switch (@operator)
@@ -99,7 +116,6 @@ namespace SlackCommander.Web.CommandHandlers
                         text = ToSlackString(list)
                     });
                     return null;
-                    break;
                 }
                 case "add":
                 {
@@ -135,12 +151,10 @@ namespace SlackCommander.Web.CommandHandlers
                 {
                     _todoService.ClearItems(message.user_id);
                     return "All clear!";
-                    break;
                 }
                 default:
                 {
                     return "Sorry, that is not a valid syntax for the `/todo` command.";
-                    break;
                 }
             }
             list = _todoService.GetItems(message.user_id).ToArray();

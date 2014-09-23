@@ -61,9 +61,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.0.23.2\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Authentication.Stateless">
-      <HintPath>..\packages\Nancy.Authentication.Stateless.0.23.2\lib\net40\Nancy.Authentication.Stateless.dll</HintPath>
-    </Reference>
     <Reference Include="Nancy.Bootstrappers.Autofac">
       <HintPath>..\packages\Nancy.Bootstrappers.Autofac.0.23.2\lib\net40\Nancy.Bootstrappers.Autofac.dll</HintPath>
     </Reference>

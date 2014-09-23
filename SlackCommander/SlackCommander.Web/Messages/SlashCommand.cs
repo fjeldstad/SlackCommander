@@ -5,6 +5,7 @@ namespace SlackCommander.Web.Messages
     [Serializable]
     public class SlashCommand
     {
+        public string token { get; set; }
         public string team_id { get; set; }
         public string channel_id { get; set; }
         public string channel_name { get; set; }
