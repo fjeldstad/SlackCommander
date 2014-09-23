@@ -13,6 +13,7 @@ using Nancy.Helpers;
 using NLog;
 using SlackCommander.Web.MailChimp;
 using SlackCommander.Web.Mailgun;
+using SlackCommander.Web.Todo;
 
 namespace SlackCommander.Web
 {
@@ -29,6 +30,7 @@ namespace SlackCommander.Web
             builder.RegisterType<AppSettings>().As<IAppSettings>().SingleInstance();
             builder.RegisterType<DummyMailChimpWebhooks>().As<IMailChimpWebhooks>().SingleInstance();
             builder.RegisterType<DummyMailgunWebhooks>().As<IMailgunWebhooks>().SingleInstance();
+            builder.RegisterType<DummyTodoService>().As<ITodoService>().SingleInstance();
 
             // Consumers and sagas
             builder.RegisterAssemblyTypes(typeof(Bootstrapper).Assembly)
