@@ -24,8 +24,16 @@ namespace SlackCommander.Web.Todo
 
         public IEnumerable<TodoItem> GetItems(string listId)
         {
-            var table = GetTable();
-            return GetRecords(table, listId).Select(record => record.ToTodoItem());
+            try
+            {
+                var table = GetTable();
+                return GetRecords(table, listId).Select(record => record.ToTodoItem());
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Get todo list failed.", ex);
+                throw;
+            }
         }
 
         public void AddItem(string listId, string text)
