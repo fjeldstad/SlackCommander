@@ -113,7 +113,12 @@ namespace SlackCommander.Web.CommandHandlers
                         channel = message.channel_name == "directmessage"
                             ? "@" + message.user_name
                             : "#" + message.channel_name,
-                        text = ToSlackString(list)
+                        text = string.Format(
+                        "*{0}{1}* todo:{2}{2}{3}", 
+                        message.user_name, 
+                        message.user_name.EndsWith("s", StringComparison.InvariantCultureIgnoreCase) ? "'" : "'s",
+                        Environment.NewLine,
+                        ToSlackString(list))
                     });
                     return null;
                 }
