@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using Magnum.Extensions;
 using Microsoft.WindowsAzure;
@@ -8,6 +9,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using Microsoft.WindowsAzure.Storage.Table;
 using NLog;
+using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace SlackCommander.Web.Todo
 {
@@ -38,63 +40,102 @@ namespace SlackCommander.Web.Todo
 
         public void AddItem(string listId, string text)
         {
-            var table = GetTable();
-            var record = new TodoItemRecord
+            try
             {
-                ListId = listId,
-                Text = text,
-                Done = false
-            };
-            var itemId = 1;
-            while (true)
+                var table = GetTable();
+                var record = new TodoItemRecord
+                {
+                    ListId = listId,
+                    Text = text,
+                    Done = false
+                };
+                var itemId = 1;
+                while (true)
+                {
+                    try
+                    {
+                        record.Id = itemId++.ToString();
+                        var insertOp = TableOperation.Insert(record);
+                        table.Execute(insertOp);
+                        break;
+                    }
+                    catch (StorageException ex)
+                    {
+                        // Swallow the exception and retry if the insert failed due to a conflict.
+                        // Conflicts are expected since ItemId always starts at 1.
+                        if (ex.RequestInformation != null &&
+                            ex.RequestInformation.HttpStatusCode == (int)HttpStatusCode.Conflict)
+                        {
+                            continue;
+                        }
+                        throw; // Exception was not a conflict - just throw and let the insert fail.
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    record.Id = itemId++.ToString();
-                    var insertOp = TableOperation.Insert(record);
-                    table.Execute(insertOp);
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Insert todo item failed.", ex);
-                }
+                Log.Error("Add todo item failed.", ex);
+                throw;
             }
         }
 
         public void MarkItemAsDone(string listId, string itemId)
         {
-            var table = GetTable();
-            var record = GetRecord(table, listId, itemId);
-            if (record == null || record.Done)
+            try
             {
-                return;
+                var table = GetTable();
+                var record = GetRecord(table, listId, itemId);
+                if (record == null || record.Done)
+                {
+                    return;
+                }
+                record.Done = true;
+                var replaceOp = TableOperation.Replace(record);
+                table.Execute(replaceOp); // TODO Handle failure/retry
             }
-            record.Done = true;
-            var replaceOp = TableOperation.Replace(record);
-            table.Execute(replaceOp); // TODO Handle failure/retry
+            catch (Exception ex)
+            {
+                Log.Error("Mark todo item as done failed.", ex);
+                throw;
+            }
         }
 
         public void RemoveItem(string listId, string itemId)
         {
-            var table = GetTable();
-            var record = GetRecord(table, listId, itemId);
-            if (record == null)
+            try
             {
-                return;
+                var table = GetTable();
+                var record = GetRecord(table, listId, itemId);
+                if (record == null)
+                {
+                    return;
+                }
+                var deleteOp = TableOperation.Delete(record);
+                table.Execute(deleteOp); // TODO Handle failure/retry
             }
-            var deleteOp = TableOperation.Delete(record);
-            table.Execute(deleteOp); // TODO Handle failure/retry
+            catch (Exception ex)
+            {
+                Log.Error("Remove todo item failed.", ex);
+                throw;
+            }
         }
 
         public void ClearItems(string listId)
         {
-            var table = GetTable();
-            var records = GetRecords(table, listId);
-            foreach (var record in records)
+            try
             {
-                var deleteOp = TableOperation.Delete(record);
-                table.Execute(deleteOp); // TODO Handle failure/retry
+                var table = GetTable();
+                var records = GetRecords(table, listId);
+                foreach (var record in records)
+                {
+                    var deleteOp = TableOperation.Delete(record);
+                    table.Execute(deleteOp); // TODO Handle failure/retry
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Clear todo items failed.", ex);
+                throw;
             }
         }
 
