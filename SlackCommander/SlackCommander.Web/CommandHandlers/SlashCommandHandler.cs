@@ -130,24 +130,24 @@ namespace SlackCommander.Web.CommandHandlers
                     _todoService.AddItem(listId, todoText);
                     break;
                 }
-                case "done":
+                case "tick":
                 {
                     var todoItemId = message.text.SubstringByWords(1, 1);
                     if (todoItemId.Missing())
                     {
                         return null;
                     }
-                    _todoService.MarkItemAsDone(listId, todoItemId);
+                    _todoService.TickItem(listId, todoItemId);
                     break;
                 }
-                case "notdone":
+                case "untick":
                 {
                     var todoItemId = message.text.SubstringByWords(1, 1);
                     if (todoItemId.Missing())
                     {
                         return null;
                     }
-                    _todoService.MarkItemAsNotDone(listId, todoItemId);
+                    _todoService.UntickItem(listId, todoItemId);
                     break;
                 }
                 case "remove":
@@ -165,11 +165,11 @@ namespace SlackCommander.Web.CommandHandlers
                     var modifier = (message.text.SubstringByWords(1, 1) ?? string.Empty).ToLowerInvariant();
                     if (modifier == "all")
                     {
-                        _todoService.ClearItems(listId, includeNotDone: true);
+                        _todoService.ClearItems(listId, includeUnticked: true);
                     }
                     else
                     {
-                        _todoService.ClearItems(listId, includeNotDone: false);
+                        _todoService.ClearItems(listId, includeUnticked: false);
                     }
                     break;
                 }

@@ -10,9 +10,9 @@ namespace SlackCommander.Web.Todo
     {
         IEnumerable<TodoItem> GetItems(string listId);
         void AddItem(string listId, string text);
-        void MarkItemAsDone(string listId, string itemId);
-        void MarkItemAsNotDone(string listId, string itemId);
+        void TickItem(string listId, string itemId);
+        void UntickItem(string listId, string itemId);
         void RemoveItem(string listId, string itemId);
-        void ClearItems(string listId, bool includeNotDone = false);
+        void ClearItems(string listId, bool includeUnticked = false);
     }
 }

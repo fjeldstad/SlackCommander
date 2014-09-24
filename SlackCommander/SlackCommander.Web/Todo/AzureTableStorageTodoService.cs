@@ -79,7 +79,7 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void MarkItemAsDone(string listId, string itemId)
+        public void TickItem(string listId, string itemId)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void MarkItemAsNotDone(string listId, string itemId)
+        public void UntickItem(string listId, string itemId)
         {
             try
             {
@@ -141,12 +141,12 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void ClearItems(string listId, bool includeNotDone = false)
+        public void ClearItems(string listId, bool includeUnticked = false)
         {
             try
             {
                 var table = GetTable();
-                var records = GetRecords(table, listId).Where(x => x.Done || includeNotDone);
+                var records = GetRecords(table, listId).Where(x => x.Done || includeUnticked);
                 foreach (var record in records)
                 {
                     var deleteOp = TableOperation.Delete(record);
