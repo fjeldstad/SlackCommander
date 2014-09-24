@@ -141,13 +141,13 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void ClearDoneItems(string listId)
+        public void ClearItems(string listId, bool includeNotDone = false)
         {
             try
             {
                 var table = GetTable();
-                var completedRecords = GetRecords(table, listId).Where(x => x.Done);
-                foreach (var record in completedRecords)
+                var records = GetRecords(table, listId).Where(x => x.Done || includeNotDone);
+                foreach (var record in records)
                 {
                     var deleteOp = TableOperation.Delete(record);
                     table.Execute(deleteOp); // TODO Handle failure/retry

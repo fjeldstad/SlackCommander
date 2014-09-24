@@ -13,6 +13,6 @@ namespace SlackCommander.Web.Todo
         void MarkItemAsDone(string listId, string itemId);
         void MarkItemAsNotDone(string listId, string itemId);
         void RemoveItem(string listId, string itemId);
-        void ClearDoneItems(string listId);
+        void ClearItems(string listId, bool includeNotDone = false);
     }
 }

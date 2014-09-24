@@ -162,7 +162,15 @@ namespace SlackCommander.Web.CommandHandlers
                 }
                 case "clear":
                 {
-                    _todoService.ClearDoneItems(listId);
+                    var modifier = (message.text.SubstringByWords(1, 1) ?? string.Empty).ToLowerInvariant();
+                    if (modifier == "all")
+                    {
+                        _todoService.ClearItems(listId, includeNotDone: true);
+                    }
+                    else
+                    {
+                        _todoService.ClearItems(listId, includeNotDone: false);
+                    }
                     break;
                 }
                 default:
