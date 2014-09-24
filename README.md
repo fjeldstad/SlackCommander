@@ -66,6 +66,11 @@ manage the list. Operators are:
 
 ![SlackCommander /todo show response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/todo-public.png)
 
+As stated above, each conversation gets its own list and everyone in the
+conversation is free to manage it. Use the Slackbot channel if you want a
+personal list, or create a private group with no other members (good for
+todo-per-topic).
+
 
 ## Misc. integrations
 
