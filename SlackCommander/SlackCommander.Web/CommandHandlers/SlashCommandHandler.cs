@@ -160,17 +160,14 @@ namespace SlackCommander.Web.CommandHandlers
                     _todoService.RemoveItem(listId, todoItemId);
                     break;
                 }
+                case "trim":
+                {
+                    _todoService.ClearItems(listId, includeUnticked: false);
+                    break;
+                }
                 case "clear":
                 {
-                    var modifier = (message.text.SubstringByWords(1, 1) ?? string.Empty).ToLowerInvariant();
-                    if (modifier == "all")
-                    {
-                        _todoService.ClearItems(listId, includeUnticked: true);
-                    }
-                    else
-                    {
-                        _todoService.ClearItems(listId, includeUnticked: false);
-                    }
+                    _todoService.ClearItems(listId, includeUnticked: true);
                     break;
                 }
                 default:
