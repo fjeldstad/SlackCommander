@@ -45,6 +45,7 @@ manage the list. Operators are:
 - `remove [id]` Removes an item from the list.
 - `trim` Removes all ticked (done) items.
 - `clear` Removes all items.
+- `help` Display usage information.
 
 **Example:**
 
