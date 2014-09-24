@@ -170,9 +170,14 @@ namespace SlackCommander.Web.CommandHandlers
                     _todoService.ClearItems(listId, includeUnticked: true);
                     break;
                 }
+                case "help":
+                {
+                    return "TODO"; // TODO Return usage info
+                    break;
+                }
                 default:
                 {
-                    return "Sorry, that is not a valid syntax for the `/todo` command.";
+                    return "Sorry, that is not a valid syntax for the `/todo` command. Use `/todo help` to see available operations.";
                 }
             }
             list = _todoService.GetItems(listId).ToArray();
