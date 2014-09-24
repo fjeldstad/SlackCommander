@@ -8,9 +8,12 @@ Built with [Nancy](http://nancyfx.org/) and can easily be hosted as a free
 [![Build status](https://ci.appveyor.com/api/projects/status/yki2s9y81vw2h7wn/branch/master)](https://ci.appveyor.com/project/Hihaj/slackcommander/branch/master)
 
 
-## Slash commands 
+## Whois lookup for e-mail addresses or Twitter handles
 
-`/whois [e-mail or Twitter handle]`
+```
+/whois [e-mail address]
+/whois [Twitter handle]
+```
 
 Performs a lookup and sends a brief summary of who the person behind the e-mail 
 address or Twitter handle is to the current channel. Requires a 
@@ -19,11 +22,48 @@ address or Twitter handle is to the current channel. Requires a
 
 **Example:**
 
-    /whois @SlackHQ
+```
+/whois @SlackHQ
+```
 
 SlackCommander responds to the current channel with something similar to this:
 
 ![SlackCommander /whois example response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/whois-result.png)
+
+
+## Todo list
+
+A simple todo list per conversation (channel/direct message/private group).
+Use the `/todo` command together with one of the supported operators to 
+manage the list. Operators are:
+
+- `[empty]` Displays the list to you.
+- `show` Displays the list to everyone in the conversation.
+- `add [text]` Adds an item to the list. The item gets a numeric ID automatically.
+- `tick [id]` Marks an item as "done".
+- `untick [id]` Marks an item as "not done".
+- `remove [id]` Removes an item from the list.
+- `trim` Removes all ticked (done) items.
+- `clear` Removes all items.
+
+**Example:**
+
+```
+/todo add Update SlackCommander readme
+/todo add Get coffee
+/todo add Get to inbox zero
+/todo
+```
+
+![SlackCommander /todo response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/todo-private.png)
+
+```
+/todo tick 1
+/todo tick 3
+/todo show
+```
+
+![SlackCommander /todo show response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/todo-public.png)
 
 
 ## Misc. integrations
