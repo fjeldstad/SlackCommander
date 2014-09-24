@@ -29,7 +29,7 @@ namespace SlackCommander.Web.CommandHandlers
         {
             string responseText = null;
 
-            switch (message.command)
+            switch (message.command.ToLowerInvariant())
             {
                 case "/whois":
                     responseText = HandleWhois(message);
@@ -100,6 +100,10 @@ namespace SlackCommander.Web.CommandHandlers
             var listId = message.channel_id;
             var list = _todoService.GetItems(listId).ToArray();
             var @operator = message.text.SubstringByWords(0, 1);
+            if (!@operator.Missing())
+            {
+                @operator = @operator.ToLowerInvariant();
+            }
             switch (@operator)
             {
                 case "":
@@ -135,7 +139,17 @@ namespace SlackCommander.Web.CommandHandlers
                     }
                     _todoService.MarkItemAsDone(listId, todoItemId);
                     break;
-                } 
+                }
+                case "notdone":
+                {
+                    var todoItemId = message.text.SubstringByWords(1, 1);
+                    if (todoItemId.Missing())
+                    {
+                        return null;
+                    }
+                    _todoService.MarkItemAsNotDone(listId, todoItemId);
+                    break;
+                }
                 case "remove":
                 {
                     var todoItemId = message.text.SubstringByWords(1, 1);
@@ -148,7 +162,7 @@ namespace SlackCommander.Web.CommandHandlers
                 }
                 case "clear":
                 {
-                    _todoService.ClearItems(listId);
+                    _todoService.ClearDoneItems(listId);
                     break;
                 }
                 default:

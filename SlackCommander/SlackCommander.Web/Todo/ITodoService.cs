@@ -11,7 +11,8 @@ namespace SlackCommander.Web.Todo
         IEnumerable<TodoItem> GetItems(string listId);
         void AddItem(string listId, string text);
         void MarkItemAsDone(string listId, string itemId);
+        void MarkItemAsNotDone(string listId, string itemId);
         void RemoveItem(string listId, string itemId);
-        void ClearItems(string listId);
+        void ClearDoneItems(string listId);
     }
 }

@@ -100,6 +100,27 @@ namespace SlackCommander.Web.Todo
             }
         }
 
+        public void MarkItemAsNotDone(string listId, string itemId)
+        {
+            try
+            {
+                var table = GetTable();
+                var record = GetRecord(table, listId, itemId);
+                if (record == null || !record.Done)
+                {
+                    return;
+                }
+                record.Done = false;
+                var replaceOp = TableOperation.Replace(record);
+                table.Execute(replaceOp); // TODO Handle failure/retry
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Mark todo item as not done failed.", ex);
+                throw;
+            }
+        }
+
         public void RemoveItem(string listId, string itemId)
         {
             try
@@ -120,13 +141,13 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void ClearItems(string listId)
+        public void ClearDoneItems(string listId)
         {
             try
             {
                 var table = GetTable();
-                var records = GetRecords(table, listId);
-                foreach (var record in records)
+                var completedRecords = GetRecords(table, listId).Where(x => x.Done);
+                foreach (var record in completedRecords)
                 {
                     var deleteOp = TableOperation.Delete(record);
                     table.Execute(deleteOp); // TODO Handle failure/retry
