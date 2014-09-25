@@ -34,9 +34,6 @@ namespace SlackCommander.Web.CommandHandlers
                 case "/whois":
                     responseText = HandleWhois(message);
                     break;
-                case "/todo":
-                    responseText = HandleTodo(message);
-                    break;
                 default:
                     responseText = string.Format("Sorry, *{0}* is not a supported slash command.", message.command);
                     break;
@@ -87,125 +84,6 @@ namespace SlackCommander.Web.CommandHandlers
             }
 
             return "Sorry, I'm only able to work with e-mail addresses and Twitter handles.";
-        }
-
-        private string HandleTodo(SlashCommand message)
-        {
-            if (!_appSettings.Get("todo:slackSlashCommandToken").Equals(message.token))
-            {
-                Log.Info("Blocked an unauthorized /todo slash command.");
-                return null;
-            }
-
-            var listId = message.channel_id;
-            var list = _todoService.GetItems(listId).ToArray();
-            var @operator = message.text.SubstringByWords(0, 1);
-            if (!@operator.Missing())
-            {
-                @operator = @operator.ToLowerInvariant();
-            }
-            switch (@operator)
-            {
-                case "":
-                {
-                    // Just echo the list
-                    break;
-                }
-                case "show":
-                {
-                    _bus.Publish(new MessageToSlack
-                    {
-                        channel = listId,
-                        text = ToSlackString(list)
-                    });
-                    return null;
-                }
-                case "add":
-                {
-                    var todoText = message.text.SubstringByWords(1);
-                    if (todoText.Missing())
-                    {
-                        return null;
-                    }
-                    _todoService.AddItem(listId, todoText);
-                    break;
-                }
-                case "tick":
-                {
-                    var todoItemId = message.text.SubstringByWords(1, 1);
-                    if (todoItemId.Missing())
-                    {
-                        return null;
-                    }
-                    _todoService.TickItem(listId, todoItemId);
-                    break;
-                }
-                case "untick":
-                {
-                    var todoItemId = message.text.SubstringByWords(1, 1);
-                    if (todoItemId.Missing())
-                    {
-                        return null;
-                    }
-                    _todoService.UntickItem(listId, todoItemId);
-                    break;
-                }
-                case "remove":
-                {
-                    var todoItemId = message.text.SubstringByWords(1, 1);
-                    if (todoItemId.Missing())
-                    {
-                        return null;
-                    }
-                    _todoService.RemoveItem(listId, todoItemId);
-                    break;
-                }
-                case "trim":
-                {
-                    _todoService.ClearItems(listId, includeUnticked: false);
-                    break;
-                }
-                case "clear":
-                {
-                    _todoService.ClearItems(listId, includeUnticked: true);
-                    break;
-                }
-                case "help":
-                {
-                    return "TODO"; // TODO Return usage info
-                    break;
-                }
-                default:
-                {
-                    return "Sorry, that is not a valid syntax for the `/todo` command. Use `/todo help` to see available operations.";
-                }
-            }
-            list = _todoService.GetItems(listId).ToArray();
-            return ToSlackString(list);
-        }
-
-        private static string ToSlackString(IEnumerable<TodoItem> todoItems)
-        {
-            var items = todoItems.ToArray();
-            if (!items.Any())
-            {
-                return "You are all done!";
-            }
-            var text = new StringBuilder();
-            foreach (var item in todoItems)
-            {
-                text.AppendLine(ToSlackString(item));
-            }
-            return text.ToString().Trim();
-        }
-
-        private static string ToSlackString(TodoItem todoItem)
-        {
-            return string.Format(
-                "`{0}` {1} {2}",
-                todoItem.Id,
-                todoItem.Done ? ":white_check_mark:" : ":white_square:",
-                todoItem.Text);
         }
     }
 }

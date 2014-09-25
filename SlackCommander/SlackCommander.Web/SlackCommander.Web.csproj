@@ -158,6 +158,8 @@
     <Compile Include="Todo\AzureTableStorageTodoService.cs" />
     <Compile Include="Todo\ITodoService.cs" />
     <Compile Include="Todo\TodoItem.cs" />
+    <Compile Include="Todo\TodoItemExtensions.cs" />
+    <Compile Include="Todo\TodoModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
