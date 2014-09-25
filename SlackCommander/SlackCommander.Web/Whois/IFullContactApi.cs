@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Refit;
 
-namespace SlackCommander.Web.FullContact
+namespace SlackCommander.Web.Whois
 {
     public interface IFullContactApi
     {

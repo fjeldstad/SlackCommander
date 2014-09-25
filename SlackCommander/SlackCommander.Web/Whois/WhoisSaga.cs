@@ -6,8 +6,9 @@ using System.Web;
 using Magnum.StateMachine;
 using MassTransit.Saga;
 using SlackCommander.Web.Messages;
+using SlackCommander.Web.Whois.Messages;
 
-namespace SlackCommander.Web.Sagas
+namespace SlackCommander.Web.Whois
 {
     public class WhoisSaga : 
         SagaStateMachine<WhoisSaga>,

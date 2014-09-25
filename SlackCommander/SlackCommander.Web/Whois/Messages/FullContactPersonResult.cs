@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SlackCommander.Web.Messages
+namespace SlackCommander.Web.Whois.Messages
 {
     [Serializable]
     public class FullContactPersonResult

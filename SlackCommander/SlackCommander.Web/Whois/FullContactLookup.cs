@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using MassTransit;
 using NLog;
 using Refit;
-using SlackCommander.Web.FullContact;
-using SlackCommander.Web.Messages;
+using SlackCommander.Web.Whois.Messages;
 
-namespace SlackCommander.Web.CommandHandlers
+namespace SlackCommander.Web.Whois
 {
     public class FullContactLookup : 
         Consumes<FullContactEmailLookupRequest>.All,

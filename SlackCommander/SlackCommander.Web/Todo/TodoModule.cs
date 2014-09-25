@@ -129,7 +129,6 @@ namespace SlackCommander.Web.Todo
                 case "help":
                     {
                         return "TODO"; // TODO Return usage info
-                        break;
                     }
                 default:
                     {

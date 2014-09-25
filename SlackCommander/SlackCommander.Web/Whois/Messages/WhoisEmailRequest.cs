@@ -1,7 +1,7 @@
 ﻿using System;
 using MassTransit;
 
-namespace SlackCommander.Web.Messages
+namespace SlackCommander.Web.Whois.Messages
 {
     [Serializable]
     public class WhoisEmailRequest : CorrelatedBy<Guid>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using MassTransit;
 
-namespace SlackCommander.Web.Messages
+namespace SlackCommander.Web.Whois.Messages
 {
     public class FullContactEmailLookupRequest
     {
