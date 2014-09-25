@@ -50,7 +50,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         private string HandleWhois(SlashCommand message)
         {
-            if (!_appSettings.Get("slack:whoisSlashCommandToken").Equals(message.token))
+            if (!_appSettings.Get("whois:slackSlashCommandToken").Equals(message.token))
             {
                 Log.Info("Blocked an unauthorized /whois slash command.");
                 return null;
@@ -91,7 +91,7 @@ namespace SlackCommander.Web.CommandHandlers
 
         private string HandleTodo(SlashCommand message)
         {
-            if (!_appSettings.Get("slack:todoSlashCommandToken").Equals(message.token))
+            if (!_appSettings.Get("todo:slackSlashCommandToken").Equals(message.token))
             {
                 Log.Info("Blocked an unauthorized /todo slash command.");
                 return null;

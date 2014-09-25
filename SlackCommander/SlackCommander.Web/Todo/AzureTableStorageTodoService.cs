@@ -162,7 +162,7 @@ namespace SlackCommander.Web.Todo
 
         private CloudTable GetTable()
         {
-            var storageAccount = CloudStorageAccount.Parse(_appSettings.Get("azure:storageConnectionString"));
+            var storageAccount = CloudStorageAccount.Parse(_appSettings.Get("todo:azureStorageConnectionString"));
             var tableClient = storageAccount.CreateCloudTableClient();
             var table = tableClient.GetTableReference(TableName);
             table.CreateIfNotExists();

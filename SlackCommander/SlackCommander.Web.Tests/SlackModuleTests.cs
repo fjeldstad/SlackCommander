@@ -30,6 +30,7 @@ namespace SlackCommander.Web.Tests
         }
 
         [Test]
+        [Ignore("Modularization means that slash commands will not be published on the bus anymore.")]
         public void ValidSlashCommandReceived_SlashCommandPublishedOnBus()
         {
             var slashCommandHandler = new TestConsumerOf<SlashCommand>(m => 

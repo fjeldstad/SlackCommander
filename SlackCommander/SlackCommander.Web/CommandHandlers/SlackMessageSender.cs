@@ -31,8 +31,8 @@ namespace SlackCommander.Web.CommandHandlers
             {
                 message.icon_emoji = ":octopus:";
             }
-            var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slack:responseBaseUrl"));
-            slackApi.SendMessage(message, _appSettings.Get("slack:responseToken"));
+            var slackApi = RestService.For<ISlackApi>(_appSettings.Get("slackMessage:responseBaseUrl"));
+            slackApi.SendMessage(message, _appSettings.Get("slackMessage:responseToken"));
         }
     }
 }

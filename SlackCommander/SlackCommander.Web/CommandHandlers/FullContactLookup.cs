@@ -21,9 +21,9 @@ namespace SlackCommander.Web.CommandHandlers
 
         public FullContactLookup(IAppSettings appSettings)
         {
-            _fullContactApiBaseUrl = appSettings.Get("fullContact:apiBaseUrl");
-            _fullContactApiKey = appSettings.Get("fullContact:apiKey");
-            _fullContactWebhookUrl = appSettings.Get("fullContact:webhookUrl");
+            _fullContactApiBaseUrl = appSettings.Get("whois:fullContactApiBaseUrl");
+            _fullContactApiKey = appSettings.Get("whois:fullContactApiKey");
+            _fullContactWebhookUrl = appSettings.Get("whois:fullContactWebhookUrl");
         }
 
         public void Consume(FullContactEmailLookupRequest message)
