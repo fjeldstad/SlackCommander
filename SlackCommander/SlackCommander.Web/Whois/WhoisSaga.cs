@@ -5,7 +5,6 @@ using System.Text;
 using System.Web;
 using Magnum.StateMachine;
 using MassTransit.Saga;
-using SlackCommander.Web.Messages;
 using SlackCommander.Web.SlackMessage.Messages;
 using SlackCommander.Web.Whois.Messages;
 

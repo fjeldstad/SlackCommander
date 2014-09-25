@@ -128,7 +128,6 @@
     <Compile Include="SlackMessage\SlackMessageSender.cs" />
     <Compile Include="Whois\Messages\FullContactEmailLookupRequest.cs" />
     <Compile Include="Whois\Messages\FullContactTwitterLookupRequest.cs" />
-    <Compile Include="Messages\SlashCommandResponse.cs" />
     <Compile Include="Whois\Messages\WhoisTwitterRequest.cs" />
     <Compile Include="Whois\Messages\WhoisEmailRequest.cs" />
     <Compile Include="MailChimp\DummyMailChimpWebhooks.cs" />
@@ -137,7 +136,7 @@
     <Compile Include="MailChimp\MailChimpModule.cs" />
     <Compile Include="Mailgun\MailgunModule.cs" />
     <Compile Include="Whois\WhoisSaga.cs" />
-    <Compile Include="Messages\SlashCommand.cs" />
+    <Compile Include="SlashCommand.cs" />
     <Compile Include="Whois\FullContactLookup.cs" />
     <Compile Include="Mailgun\DummyMailgunWebhooks.cs" />
     <Compile Include="Whois\Messages\FullContactPersonResult.cs" />
