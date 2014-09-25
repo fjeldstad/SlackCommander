@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Refit;
-using SlackCommander.Web.Messages;
+using SlackCommander.Web.SlackMessage.Messages;
 
 namespace SlackCommander.Web
 {

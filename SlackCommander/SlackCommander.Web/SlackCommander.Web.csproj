@@ -125,7 +125,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="CommandHandlers\SlackMessageSender.cs" />
+    <Compile Include="SlackMessage\SlackMessageSender.cs" />
     <Compile Include="Whois\Messages\FullContactEmailLookupRequest.cs" />
     <Compile Include="Whois\Messages\FullContactTwitterLookupRequest.cs" />
     <Compile Include="Messages\SlashCommandResponse.cs" />
@@ -146,7 +146,7 @@
     <Compile Include="Mailgun\IMailgunWebhooks.cs" />
     <Compile Include="ISlackApi.cs" />
     <Compile Include="Mailgun\MailgunWebhook.cs" />
-    <Compile Include="Messages\MessageToSlack.cs" />
+    <Compile Include="SlackMessage\Messages\MessageToSlack.cs" />
     <Compile Include="IAppSettings.cs" />
     <Compile Include="Whois\IFullContactApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

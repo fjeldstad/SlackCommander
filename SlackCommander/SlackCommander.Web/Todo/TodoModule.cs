@@ -8,6 +8,7 @@ using Nancy;
 using Nancy.ModelBinding;
 using NLog;
 using SlackCommander.Web.Messages;
+using SlackCommander.Web.SlackMessage.Messages;
 
 namespace SlackCommander.Web.Todo
 {

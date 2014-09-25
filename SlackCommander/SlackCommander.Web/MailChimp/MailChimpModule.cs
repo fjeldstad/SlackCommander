@@ -5,7 +5,7 @@ using System.Web;
 using MassTransit;
 using Nancy;
 using NLog;
-using SlackCommander.Web.Messages;
+using SlackCommander.Web.SlackMessage.Messages;
 using SlackCommander.Web.Whois.Messages;
 
 namespace SlackCommander.Web.MailChimp

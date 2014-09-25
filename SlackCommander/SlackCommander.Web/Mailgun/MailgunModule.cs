@@ -7,8 +7,7 @@ using System.Web;
 using MassTransit;
 using Nancy;
 using NLog;
-using Refit;
-using SlackCommander.Web.Messages;
+using SlackCommander.Web.SlackMessage.Messages;
 
 namespace SlackCommander.Web.Mailgun
 {

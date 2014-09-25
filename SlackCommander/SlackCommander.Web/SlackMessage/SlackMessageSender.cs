@@ -6,9 +6,9 @@ using System.Web;
 using MassTransit;
 using NLog;
 using Refit;
-using SlackCommander.Web.Messages;
+using SlackCommander.Web.SlackMessage.Messages;
 
-namespace SlackCommander.Web.CommandHandlers
+namespace SlackCommander.Web.SlackMessage
 {
     public class SlackMessageSender : Consumes<MessageToSlack>.All
     {
