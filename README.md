@@ -8,29 +8,6 @@ Built with [Nancy](http://nancyfx.org/) and can easily be hosted as a free
 [![Build status](https://ci.appveyor.com/api/projects/status/yki2s9y81vw2h7wn/branch/master)](https://ci.appveyor.com/project/Hihaj/slackcommander/branch/master)
 
 
-## Whois lookup for e-mail addresses or Twitter handles
-
-```
-/whois [e-mail address]
-/whois [Twitter handle]
-```
-
-Performs a lookup and sends a brief summary of who the person behind the e-mail 
-address or Twitter handle is to the current channel. Requires a 
-[FullContact](http://www.fullcontact.com/developer/person-api/) API key
-(the free tier currently includes 250 lookups per month).
-
-**Example:**
-
-```
-/whois @SlackHQ
-```
-
-SlackCommander responds to the current channel with something similar to this:
-
-![SlackCommander /whois example response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/whois-result.png)
-
-
 ## Todo list
 
 A simple todo list per conversation (channel/direct message/private group).
@@ -70,6 +47,29 @@ As stated above, each conversation gets its own list and everyone in the
 conversation is free to manage it. Use the Slackbot channel if you want a
 personal list, or create a private group with no other members (good for
 todo-per-topic).
+
+
+## Whois lookup for e-mail addresses or Twitter handles
+
+```
+/whois [e-mail address]
+/whois [Twitter handle]
+```
+
+Performs a lookup and sends a brief summary of who the person behind the e-mail 
+address or Twitter handle is to the current channel. Requires a 
+[FullContact](http://www.fullcontact.com/developer/person-api/) API key
+(the free tier currently includes 250 lookups per month).
+
+**Example:**
+
+```
+/whois @SlackHQ
+```
+
+SlackCommander responds to the current channel with something similar to this:
+
+![SlackCommander /whois example response](https://raw.githubusercontent.com/Hihaj/SlackCommander/master/whois-result.png)
 
 
 ## Misc. integrations
