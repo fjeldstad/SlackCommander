@@ -31,7 +31,7 @@ namespace SlackCommander.Web.Todo
                 todoItem.Done ? ":white_check_mark:" : ":white_square:",
                 todoItem.Text,
                 todoItem.ClaimedBy.Missing() ? string.Empty : ":lock:",
-                todoItem.ClaimedBy).Trim();
+                todoItem.ClaimedBy.Missing() ? string.Empty : string.Format("<@{0}>", todoItem.ClaimedBy)).Trim();
         }
     }
 }
