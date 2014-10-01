@@ -127,6 +127,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="HomeModule.cs" />
     <Compile Include="SlackMessage\SlackMessageSender.cs" />
+    <Compile Include="Todo\TodoItemClaimedBySomeoneElseException.cs" />
     <Compile Include="Whois\Messages\FullContactEmailLookupRequest.cs" />
     <Compile Include="Whois\Messages\FullContactTwitterLookupRequest.cs" />
     <Compile Include="Whois\Messages\WhoisTwitterRequest.cs" />

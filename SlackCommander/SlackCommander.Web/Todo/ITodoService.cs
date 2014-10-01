@@ -14,5 +14,7 @@ namespace SlackCommander.Web.Todo
         void UntickItem(string listId, string itemId);
         void RemoveItem(string listId, string itemId);
         void ClearItems(string listId, bool includeUnticked = false);
+        void ClaimItem(string listId, string itemId, string userId);
+        void FreeItem(string listId, string itemId, string userId);
     }
 }

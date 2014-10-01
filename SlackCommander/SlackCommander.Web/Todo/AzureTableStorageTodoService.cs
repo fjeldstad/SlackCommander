@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.UI.WebControls;
 using Magnum.Extensions;
+using MassTransit.Exceptions;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
@@ -15,9 +17,13 @@ namespace SlackCommander.Web.Todo
 {
     public class AzureTableStorageTodoService : ITodoService
     {
-        private const string TableName = "todoLists";
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IAppSettings _appSettings;
+
+        private static class Tables
+        {
+            public const string TodoLists = "todoLists";
+        }
 
         public AzureTableStorageTodoService(IAppSettings appSettings)
         {
@@ -28,8 +34,8 @@ namespace SlackCommander.Web.Todo
         {
             try
             {
-                var table = GetTable();
-                return GetRecords(table, listId).Select(record => record.ToTodoItem());
+                var table = GetTable(Tables.TodoLists);
+                return table.GetRecords<TodoItemRecord>(listId).Select(record => record.ToTodoItem());
             }
             catch (Exception ex)
             {
@@ -42,7 +48,7 @@ namespace SlackCommander.Web.Todo
         {
             try
             {
-                var table = GetTable();
+                var table = GetTable(Tables.TodoLists);
                 var record = new TodoItemRecord
                 {
                     ListId = listId,
@@ -55,8 +61,7 @@ namespace SlackCommander.Web.Todo
                     try
                     {
                         record.Id = itemId++.ToString();
-                        var insertOp = TableOperation.Insert(record);
-                        table.Execute(insertOp);
+                        table.InsertRecord(record);
                         break;
                     }
                     catch (StorageException ex)
@@ -83,15 +88,14 @@ namespace SlackCommander.Web.Todo
         {
             try
             {
-                var table = GetTable();
-                var record = GetRecord(table, listId, itemId);
+                var table = GetTable(Tables.TodoLists);
+                var record = table.GetRecord<TodoItemRecord>(listId, itemId);
                 if (record == null || record.Done)
                 {
                     return;
                 }
                 record.Done = true;
-                var replaceOp = TableOperation.Replace(record);
-                table.Execute(replaceOp); // TODO Handle failure/retry
+                table.ReplaceRecord(record);
             }
             catch (Exception ex)
             {
@@ -104,15 +108,14 @@ namespace SlackCommander.Web.Todo
         {
             try
             {
-                var table = GetTable();
-                var record = GetRecord(table, listId, itemId);
+                var table = GetTable(Tables.TodoLists);
+                var record = table.GetRecord<TodoItemRecord>(listId, itemId);
                 if (record == null || !record.Done)
                 {
                     return;
                 }
                 record.Done = false;
-                var replaceOp = TableOperation.Replace(record);
-                table.Execute(replaceOp); // TODO Handle failure/retry
+                table.ReplaceRecord(record);
             }
             catch (Exception ex)
             {
@@ -125,14 +128,8 @@ namespace SlackCommander.Web.Todo
         {
             try
             {
-                var table = GetTable();
-                var record = GetRecord(table, listId, itemId);
-                if (record == null)
-                {
-                    return;
-                }
-                var deleteOp = TableOperation.Delete(record);
-                table.Execute(deleteOp); // TODO Handle failure/retry
+                var table = GetTable(Tables.TodoLists);
+                table.DeleteRecord<TodoItemRecord>(listId, itemId);
             }
             catch (Exception ex)
             {
@@ -145,12 +142,11 @@ namespace SlackCommander.Web.Todo
         {
             try
             {
-                var table = GetTable();
-                var records = GetRecords(table, listId).Where(x => x.Done || includeUnticked);
+                var table = GetTable(Tables.TodoLists);
+                var records = table.GetRecords<TodoItemRecord>(listId).Where(x => x.Done || includeUnticked);
                 foreach (var record in records)
                 {
-                    var deleteOp = TableOperation.Delete(record);
-                    table.Execute(deleteOp); // TODO Handle failure/retry
+                    table.DeleteRecord(record);
                 }
             }
             catch (Exception ex)
@@ -160,26 +156,69 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        private CloudTable GetTable()
+        public void ClaimItem(string listId, string itemId, string userId)
+        {
+            try
+            {
+                var listsTable = GetTable(Tables.TodoLists);
+                var todoItemRecord = listsTable.GetRecord<TodoItemRecord>(listId, itemId);
+                if (todoItemRecord == null)
+                {
+                    return;
+                }
+                if (!todoItemRecord.ClaimedBy.Missing())
+                {
+                    throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
+                }
+                todoItemRecord.ClaimedBy = userId;
+                listsTable.ReplaceRecord(todoItemRecord);
+            }
+            catch (TodoItemClaimedBySomeoneElseException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Claim todo item failed.", ex);
+                throw;
+            }
+        }
+
+        public void FreeItem(string listId, string itemId, string userId)
+        {
+            try
+            {
+                var listsTable = GetTable(Tables.TodoLists);
+                var todoItemRecord = listsTable.GetRecord<TodoItemRecord>(listId, itemId);
+                if (todoItemRecord != null &&
+                    !todoItemRecord.ClaimedBy.Missing())
+                {
+                    if (todoItemRecord.ClaimedBy != userId)
+                    {
+                        throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
+                    }
+                    todoItemRecord.ClaimedBy = null;
+                    listsTable.ReplaceRecord(todoItemRecord);
+                }
+            }
+            catch (TodoItemClaimedBySomeoneElseException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Free todo item failed.", ex);
+                throw;
+            }
+        }
+
+        private CloudTable GetTable(string tableName)
         {
             var storageAccount = CloudStorageAccount.Parse(_appSettings.Get("todo:azureStorageConnectionString"));
             var tableClient = storageAccount.CreateCloudTableClient();
-            var table = tableClient.GetTableReference(TableName);
+            var table = tableClient.GetTableReference(tableName);
             table.CreateIfNotExists();
             return table;
-        }
-
-        private IEnumerable<TodoItemRecord> GetRecords(CloudTable table, string listId)
-        {
-            var query = new TableQuery<TodoItemRecord>()
-                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, listId));
-            return table.ExecuteQuery(query);
-        } 
-
-        private TodoItemRecord GetRecord(CloudTable table, string listId, string itemId)
-        {
-            var retrieveOp = TableOperation.Retrieve<TodoItemRecord>(listId, itemId);
-            return table.Execute(retrieveOp).Result as TodoItemRecord;
         }
 
         public class TodoItemRecord : TableEntity
@@ -200,6 +239,7 @@ namespace SlackCommander.Web.Todo
 
             public string Text { get; set; }
             public bool Done { get; set; }
+            public string ClaimedBy { get; set; }
 
             public TodoItemRecord()
             {
@@ -211,6 +251,7 @@ namespace SlackCommander.Web.Todo
                 Id = item.Id;
                 Text = item.Text;
                 Done = item.Done;
+                ClaimedBy = item.ClaimedBy;
             }
 
             public TodoItem ToTodoItem()
@@ -220,9 +261,61 @@ namespace SlackCommander.Web.Todo
                     ListId = ListId,
                     Id = Id,
                     Text = Text,
-                    Done = Done
+                    Done = Done,
+                    ClaimedBy = ClaimedBy
                 };
             }
+        }
+    }
+
+    public static class CloudTableExtensions
+    {
+        public static TRecord GetRecord<TRecord>(this CloudTable table, string partitionKey, string rowKey)
+            where TRecord : TableEntity
+        {
+            var retrieveOp = TableOperation.Retrieve<TRecord>(partitionKey, rowKey);
+            return table.Execute(retrieveOp).Result as TRecord;
+        }
+
+        public static IEnumerable<TRecord> GetRecords<TRecord>(this CloudTable table, string partitionKey)
+            where TRecord : TableEntity, new()
+        {
+            var query = new TableQuery<TRecord>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+            return table.ExecuteQuery(query);
+        }
+
+        public static void DeleteRecord<TRecord>(this CloudTable table, TRecord record)
+            where TRecord : TableEntity
+        {
+            if (record != null)
+            {
+                var deleteOp = TableOperation.Delete(record);
+                table.Execute(deleteOp);
+            }
+        }
+
+        public static void DeleteRecord<TRecord>(this CloudTable table, string partitionKey, string rowKey)
+            where TRecord : TableEntity
+        {
+            var record = table.GetRecord<TRecord>(partitionKey, rowKey);
+            if (record != null)
+            {
+                var deleteOp = TableOperation.Delete(record);
+                table.Execute(deleteOp);
+            }
+        }
+
+        public static void InsertRecord<TRecord>(this CloudTable table, TRecord record) where TRecord : TableEntity
+        {
+            var insertOp = TableOperation.Insert(record);
+            table.Execute(insertOp);
+        }
+
+        public static void ReplaceRecord<TRecord>(this CloudTable table, TRecord record) where TRecord : TableEntity
+        {
+            var replaceOp = TableOperation.Replace(record);
+            table.Execute(replaceOp); // TODO Handle failure/retry
         }
     }
 }

@@ -126,6 +126,40 @@ namespace SlackCommander.Web.Todo
                         _todoService.ClearItems(listId, includeUnticked: true);
                         break;
                     }
+                case "claim":
+                {
+                    var todoItemId = message.text.SubstringByWords(1, 1);
+                    if (todoItemId.Missing())
+                    {
+                        return null;
+                    }
+                    try
+                    {
+                        _todoService.ClaimItem(listId, todoItemId, message.user_id);
+                        break;
+                    }
+                    catch (TodoItemClaimedBySomeoneElseException ex)
+                    {
+                        return string.Format("Sorry, <@{0}> has already claimed it.", ex.UserId);
+                    }
+                }
+                case "free":
+                {
+                    var todoItemId = message.text.SubstringByWords(1, 1);
+                    if (todoItemId.Missing())
+                    {
+                        return null;
+                    }
+                    try
+                    {
+                        _todoService.FreeItem(listId, todoItemId, message.user_id);
+                        break;
+                    }
+                    catch (TodoItemClaimedBySomeoneElseException ex)
+                    {
+                        return string.Format("Sorry, only <@{0}> can free it.", ex.UserId);
+                    }
+                }
                 case "help":
                     {
                         return "TODO"; // TODO Return usage info

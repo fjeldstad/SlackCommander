@@ -26,10 +26,12 @@ namespace SlackCommander.Web.Todo
         public static string ToSlackString(this TodoItem todoItem)
         {
             return string.Format(
-                "`{0}` {1} {2}",
+                "`{0}` {1} {2} {3} {4}",
                 todoItem.Id,
                 todoItem.Done ? ":white_check_mark:" : ":white_square:",
-                todoItem.Text);
+                todoItem.Text,
+                todoItem.ClaimedBy.Missing() ? string.Empty : ":lock:",
+                todoItem.ClaimedBy).Trim();
         }
     }
 }
