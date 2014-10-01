@@ -166,6 +166,10 @@ namespace SlackCommander.Web.Todo
                 {
                     return;
                 }
+                if (todoItemRecord.ClaimedBy == userId)
+                {
+                    return;
+                }
                 if (!todoItemRecord.ClaimedBy.Missing())
                 {
                     throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
