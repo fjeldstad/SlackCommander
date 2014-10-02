@@ -54,7 +54,7 @@ namespace SlackCommander.Web.Todo
         private string HandleTodo(SlashCommand message)
         {
             var listId = message.channel_id;
-            var list = _todoService.GetItems(listId).ToArray();
+            var list = _todoService.GetItems(message.user_id, listId).ToArray();
             var @operator = message.text.SubstringByWords(0, 1);
             if (!@operator.Missing())
             {
@@ -83,7 +83,7 @@ namespace SlackCommander.Web.Todo
                         {
                             return null;
                         }
-                        _todoService.AddItem(listId, todoText);
+                        _todoService.AddItem(message.user_id, listId, todoText);
                         break;
                     }
                 case "tick":
@@ -93,7 +93,19 @@ namespace SlackCommander.Web.Todo
                         {
                             return null;
                         }
-                        _todoService.TickItem(listId, todoItemId);
+                        var force = message.text.SubstringByWords(2, 1).ToLowerInvariant() == "force";
+                        try
+                        {
+                            _todoService.TickItem(message.user_id, listId, todoItemId, force);
+                        }
+                        catch (TodoItemClaimedBySomeoneElseException ex)
+                        {
+                            return string.Format(
+                                "This task is claimed by <@{0}>. Use `/todo {1} {2} force` to override.", 
+                                ex.UserId,
+                                @operator,
+                                todoItemId);
+                        }
                         break;
                     }
                 case "untick":
@@ -103,7 +115,7 @@ namespace SlackCommander.Web.Todo
                         {
                             return null;
                         }
-                        _todoService.UntickItem(listId, todoItemId);
+                        _todoService.UntickItem(message.user_id, listId, todoItemId);
                         break;
                     }
                 case "remove":
@@ -113,17 +125,39 @@ namespace SlackCommander.Web.Todo
                         {
                             return null;
                         }
-                        _todoService.RemoveItem(listId, todoItemId);
+                        var force = message.text.SubstringByWords(2, 1).ToLowerInvariant() == "force";
+                        try
+                        {
+                            _todoService.RemoveItem(message.user_id, listId, todoItemId, force);
+                        }
+                        catch (TodoItemClaimedBySomeoneElseException ex)
+                        {
+                            return string.Format(
+                                "This task is claimed by <@{0}>. Use `/todo {1} {2} force` to override.",
+                                ex.UserId,
+                                @operator,
+                                todoItemId);
+                        }
                         break;
                     }
                 case "trim":
                     {
-                        _todoService.ClearItems(listId, includeUnticked: false);
+                        _todoService.ClearItems(message.user_id, listId, includeUnticked: false, force: false);
                         break;
                     }
                 case "clear":
                     {
-                        _todoService.ClearItems(listId, includeUnticked: true);
+                        var force = message.text.SubstringByWords(1, 1).ToLowerInvariant() == "force";
+                        try
+                        {
+                            _todoService.ClearItems(message.user_id, listId, includeUnticked: true, force: force);
+                        }
+                        catch (TodoItemClaimedBySomeoneElseException ex)
+                        {
+                            return string.Format(
+                                "There are tasks claimed by other people. Use `/todo {0} force` to override.",
+                                @operator);
+                        }
                         break;
                     }
                 case "claim":
@@ -133,15 +167,20 @@ namespace SlackCommander.Web.Todo
                     {
                         return null;
                     }
+                    var force = message.text.SubstringByWords(2, 1).ToLowerInvariant() == "force";
                     try
                     {
-                        _todoService.ClaimItem(listId, todoItemId, message.user_id);
-                        break;
+                        _todoService.ClaimItem(message.user_id, listId, todoItemId, force);
                     }
                     catch (TodoItemClaimedBySomeoneElseException ex)
                     {
-                        return string.Format("Sorry, <@{0}> has already claimed it.", ex.UserId);
+                        return string.Format(
+                            "This task is claimed by <@{0}>. Use `/todo {1} {2} force` to override.",
+                            ex.UserId,
+                            @operator,
+                            todoItemId);
                     }
+                    break;
                 }
                 case "free":
                 {
@@ -150,15 +189,20 @@ namespace SlackCommander.Web.Todo
                     {
                         return null;
                     }
+                    var force = message.text.SubstringByWords(2, 1).ToLowerInvariant() == "force";
                     try
                     {
-                        _todoService.FreeItem(listId, todoItemId, message.user_id);
-                        break;
+                        _todoService.FreeItem(message.user_id, listId, todoItemId);
                     }
                     catch (TodoItemClaimedBySomeoneElseException ex)
                     {
-                        return string.Format("Sorry, only <@{0}> can free it.", ex.UserId);
+                        return string.Format(
+                            "This task is claimed by <@{0}>. Use `/todo {1} {2} force` to override.",
+                            ex.UserId,
+                            @operator,
+                            todoItemId);
                     }
+                    break;
                 }
                 case "help":
                     {
@@ -169,7 +213,7 @@ namespace SlackCommander.Web.Todo
                         return "Sorry, that is not a valid syntax for the `/todo` command. Use `/todo help` to see available operations.";
                     }
             }
-            list = _todoService.GetItems(listId).ToArray();
+            list = _todoService.GetItems(message.user_id, listId).ToArray();
             return list.ToSlackString();
         }
     }

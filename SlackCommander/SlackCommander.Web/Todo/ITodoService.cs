@@ -8,13 +8,13 @@ namespace SlackCommander.Web.Todo
 {
     public interface ITodoService
     {
-        IEnumerable<TodoItem> GetItems(string listId);
-        void AddItem(string listId, string text);
-        void TickItem(string listId, string itemId);
-        void UntickItem(string listId, string itemId);
-        void RemoveItem(string listId, string itemId);
-        void ClearItems(string listId, bool includeUnticked = false);
-        void ClaimItem(string listId, string itemId, string userId);
-        void FreeItem(string listId, string itemId, string userId);
+        IEnumerable<TodoItem> GetItems(string userId, string listId);
+        void AddItem(string userId, string listId, string text);
+        void TickItem(string userId, string listId, string itemId, bool force = false);
+        void UntickItem(string userId, string listId, string itemId);
+        void RemoveItem(string userId, string listId, string itemId, bool force = false);
+        void ClearItems(string userId, string listId, bool includeUnticked = false, bool force = false);
+        void ClaimItem(string userId, string listId, string itemId, bool force = false);
+        void FreeItem(string userId, string listId, string itemId, bool force = false);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Configuration;
 using System.Web;
 using System.Web.UI.WebControls;
 using Magnum.Extensions;
@@ -30,7 +31,7 @@ namespace SlackCommander.Web.Todo
             _appSettings = appSettings;
         }
 
-        public IEnumerable<TodoItem> GetItems(string listId)
+        public IEnumerable<TodoItem> GetItems(string userId, string listId)
         {
             try
             {
@@ -46,7 +47,7 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void AddItem(string listId, string text)
+        public void AddItem(string userId, string listId, string text)
         {
             try
             {
@@ -87,7 +88,7 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void TickItem(string listId, string itemId)
+        public void TickItem(string userId, string listId, string itemId, bool force = false)
         {
             try
             {
@@ -97,8 +98,20 @@ namespace SlackCommander.Web.Todo
                 {
                     return;
                 }
-                record.Done = true;
-                table.ReplaceRecord(record);
+                if (record.ClaimedBy.Missing() ||
+                    record.ClaimedBy == userId ||
+                    force)
+                {
+                    record.Done = true;
+                    record.ClaimedBy = null;
+                    table.ReplaceRecord(record);
+                    return;
+                }
+                throw new TodoItemClaimedBySomeoneElseException(record.ClaimedBy);
+            }
+            catch (TodoItemClaimedBySomeoneElseException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -107,7 +120,7 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void UntickItem(string listId, string itemId)
+        public void UntickItem(string userId, string listId, string itemId)
         {
             try
             {
@@ -127,12 +140,28 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void RemoveItem(string listId, string itemId)
+        public void RemoveItem(string userId, string listId, string itemId, bool force = false)
         {
             try
             {
                 var table = GetTable(Tables.TodoLists);
-                table.DeleteRecord<TodoItemRecord>(listId, itemId);
+                var record = table.GetRecord<TodoItemRecord>(listId, itemId);
+                if (record == null)
+                {
+                    return;
+                }
+                if (record.ClaimedBy.Missing() ||
+                    record.ClaimedBy == userId ||
+                    force)
+                {
+                    table.DeleteRecord(record);
+                    return;
+                }
+                throw new TodoItemClaimedBySomeoneElseException(record.ClaimedBy);
+            }
+            catch (TodoItemClaimedBySomeoneElseException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -141,16 +170,24 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void ClearItems(string listId, bool includeUnticked = false)
+        public void ClearItems(string userId, string listId, bool includeUnticked = false, bool force = false)
         {
             try
             {
                 var table = GetTable(Tables.TodoLists);
-                var records = table.GetRecords<TodoItemRecord>(listId).Where(x => x.Done || includeUnticked);
+                var records = table.GetRecords<TodoItemRecord>(listId).Where(x => x.Done || includeUnticked).ToArray();
+                if (!force && records.Any(r => !r.ClaimedBy.Missing() && r.ClaimedBy != userId))
+                {
+                    throw new TodoItemClaimedBySomeoneElseException(null);
+                }
                 foreach (var record in records)
                 {
                     table.DeleteRecord(record);
                 }
+            }
+            catch (TodoItemClaimedBySomeoneElseException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -159,26 +196,25 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void ClaimItem(string listId, string itemId, string userId)
+        public void ClaimItem(string userId, string listId, string itemId, bool force = false)
         {
             try
             {
                 var listsTable = GetTable(Tables.TodoLists);
                 var todoItemRecord = listsTable.GetRecord<TodoItemRecord>(listId, itemId);
-                if (todoItemRecord == null)
+                if (todoItemRecord == null ||
+                    todoItemRecord.ClaimedBy == userId)
                 {
                     return;
                 }
-                if (todoItemRecord.ClaimedBy == userId)
+                if (todoItemRecord.ClaimedBy.Missing() ||
+                    force)
                 {
+                    todoItemRecord.ClaimedBy = userId;
+                    listsTable.ReplaceRecord(todoItemRecord);
                     return;
                 }
-                if (!todoItemRecord.ClaimedBy.Missing())
-                {
-                    throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
-                }
-                todoItemRecord.ClaimedBy = userId;
-                listsTable.ReplaceRecord(todoItemRecord);
+                throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
             }
             catch (TodoItemClaimedBySomeoneElseException)
             {
@@ -191,22 +227,25 @@ namespace SlackCommander.Web.Todo
             }
         }
 
-        public void FreeItem(string listId, string itemId, string userId)
+        public void FreeItem(string userId, string listId, string itemId, bool force = false)
         {
             try
             {
                 var listsTable = GetTable(Tables.TodoLists);
                 var todoItemRecord = listsTable.GetRecord<TodoItemRecord>(listId, itemId);
-                if (todoItemRecord != null &&
-                    !todoItemRecord.ClaimedBy.Missing())
+                if (todoItemRecord == null ||
+                    todoItemRecord.ClaimedBy.Missing())
                 {
-                    if (todoItemRecord.ClaimedBy != userId)
-                    {
-                        throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
-                    }
+                    return;
+                }
+                if (todoItemRecord.ClaimedBy == userId ||
+                    force)
+                {
                     todoItemRecord.ClaimedBy = null;
                     listsTable.ReplaceRecord(todoItemRecord);
+                    return;
                 }
+                throw new TodoItemClaimedBySomeoneElseException(todoItemRecord.ClaimedBy);
             }
             catch (TodoItemClaimedBySomeoneElseException)
             {
