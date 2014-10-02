@@ -192,7 +192,7 @@ namespace SlackCommander.Web.Todo
                     var force = message.text.SubstringByWords(2, 1).ToLowerInvariant() == "force";
                     try
                     {
-                        _todoService.FreeItem(message.user_id, listId, todoItemId);
+                        _todoService.FreeItem(message.user_id, listId, todoItemId, force);
                     }
                     catch (TodoItemClaimedBySomeoneElseException ex)
                     {
