@@ -35,7 +35,9 @@ namespace SlackCommander.Web.Todo
             try
             {
                 var table = GetTable(Tables.TodoLists);
-                return table.GetRecords<TodoItemRecord>(listId).Select(record => record.ToTodoItem());
+                return table.GetRecords<TodoItemRecord>(listId)
+                    .Select(record => record.ToTodoItem())
+                    .OrderBy(i => i.CreatedAt);
             }
             catch (Exception ex)
             {
@@ -53,7 +55,8 @@ namespace SlackCommander.Web.Todo
                 {
                     ListId = listId,
                     Text = text,
-                    Done = false
+                    Done = false,
+                    CreatedAt = DateTime.UtcNow
                 };
                 var itemId = 1;
                 while (true)
@@ -244,6 +247,7 @@ namespace SlackCommander.Web.Todo
             public string Text { get; set; }
             public bool Done { get; set; }
             public string ClaimedBy { get; set; }
+            public DateTime CreatedAt { get; set; }
 
             public TodoItemRecord()
             {
@@ -256,6 +260,7 @@ namespace SlackCommander.Web.Todo
                 Text = item.Text;
                 Done = item.Done;
                 ClaimedBy = item.ClaimedBy;
+                CreatedAt = item.CreatedAt;
             }
 
             public TodoItem ToTodoItem()
@@ -266,7 +271,8 @@ namespace SlackCommander.Web.Todo
                     Id = Id,
                     Text = Text,
                     Done = Done,
-                    ClaimedBy = ClaimedBy
+                    ClaimedBy = ClaimedBy,
+                    CreatedAt = CreatedAt
                 };
             }
         }
