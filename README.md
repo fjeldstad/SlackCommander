@@ -7,6 +7,10 @@ Built with [Nancy](http://nancyfx.org/) and can easily be hosted as a free
 
 [![Build status](https://ci.appveyor.com/api/projects/status/yki2s9y81vw2h7wn/branch/master)](https://ci.appveyor.com/project/Hihaj/slackcommander/branch/master)
 
+## Installation
+
+Setup instructions for the `/todo` feature can be found [here](https://github.com/Hihaj/SlackCommander/wiki/Setup-instructions).
+
 
 ## Todo list
 
