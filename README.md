@@ -1,3 +1,5 @@
+⚠️ **Please note:** This repository is no longer maintained (and has not been for a long time).
+
 # SlackCommander
 
 Useful (?) slash commands and miscellaneous integrations for [Slack](https://slack.com/).
